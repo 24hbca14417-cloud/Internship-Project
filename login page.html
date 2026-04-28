@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vincera Auth</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Manrope',sans-serif;
+    }
+
+    body{
+      background:linear-gradient(135deg,#dbe3ee 0%, #eef3f8 45%, #d9e0eb 100%);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* BACKGROUND EFFECTS */
+    .bg-blur{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(70px);
+      opacity:.55;
+      z-index:0;
+      animation:floatGlow 10s ease-in-out infinite;
+    }
+
+    .bg1{
+      width:260px;
+      height:260px;
+      background:rgba(122,91,255,.28);
+      top:-40px;
+      left:-30px;
+    }
+
+    .bg2{
+      width:320px;
+      height:320px;
+      background:rgba(97,179,237,.23);
+      bottom:-90px;
+      right:-60px;
+      animation-delay:2s;
+    }
+
+    .bg3{
+      width:180px;
+      height:180px;
+      background:rgba(255,255,255,.35);
+      top:18%;
+      right:12%;
+      animation-delay:4s;
+    }
+
+    .grid-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:40px 40px;
+      mask-image:radial-gradient(circle at center, black 40%, transparent 90%);
+      opacity:.25;
+      z-index:0;
+      animation:gridMove 18s linear infinite;
+    }
+
+    .wave{
+      position:absolute;
+      left:-10%;
+      width:120%;
+      height:220px;
+      border-radius:45%;
+      z-index:0;
+      opacity:.45;
+      filter:blur(10px);
+    }
+
+    .wave1{
+      bottom:-120px;
+      background:linear-gradient(90deg, rgba(122,91,255,.18), rgba(97,179,237,.16), rgba(255,255,255,.12));
+      animation:waveMove 12s ease-in-out infinite;
+    }
+
+    .wave2{
+      bottom:-145px;
+      background:linear-gradient(90deg, rgba(255,255,255,.14), rgba(122,91,255,.12), rgba(97,179,237,.12));
+      animation:waveMove 16s ease-in-out infinite reverse;
+    }
+
+    .sparkles span{
+      position:absolute;
+      width:6px;
+      height:6px;
+      background:rgba(255,255,255,.8);
+      border-radius:50%;
+      box-shadow:0 0 10px rgba(255,255,255,.8);
+      z-index:0;
+      animation:twinkle 4s ease-in-out infinite;
+    }
+
+    .sparkles span:nth-child(1){ top:14%; left:18%; animation-delay:0s; }
+    .sparkles span:nth-child(2){ top:22%; right:20%; animation-delay:1s; }
+    .sparkles span:nth-child(3){ bottom:24%; left:14%; animation-delay:2s; }
+    .sparkles span:nth-child(4){ bottom:18%; right:16%; animation-delay:3s; }
+    .sparkles span:nth-child(5){ top:40%; left:8%; animation-delay:1.5s; }
+    .sparkles span:nth-child(6){ top:65%; right:10%; animation-delay:2.5s; }
+
+    .brand{
+      position:absolute;
+      top:18px;
+      left:25px;
+      font-size:18px;
+      font-weight:700;
+      color:#24163f;
+      z-index:2;
+      animation:slideDown .8s ease;
+      letter-spacing:.3px;
+    }
+
+    .brand::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-4px;
+      width:100%;
+      height:2px;
+      background:linear-gradient(90deg,#7a5bff,transparent);
+      border-radius:30px;
+      opacity:.8;
+    }
+
+    .main{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+
+    .page-title{
+      font-size:22px;
+      margin-bottom:18px;
+      font-weight:700;
+      background:linear-gradient(90deg,#2b2143,#7a5bff,#63b3ed,#2b2143);
+      background-size:300% 100%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:fadeInUp .8s ease, titleFlow 5s linear infinite;
+      text-shadow:0 0 18px rgba(122,91,255,.08);
+    }
+
+    .auth-box{
+      width:340px;
+      background:rgba(36,22,63,.95);
+      border-radius:18px;
+      padding:24px 22px 18px;
+      box-shadow:
+        0 12px 28px rgba(0,0,0,0.12),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 30px rgba(122,91,255,0.10);
+      animation:boxEntry .8s ease, floatBox 4s ease-in-out infinite;
+      transition:.3s ease;
+      position:relative;
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .auth-box::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:linear-gradient(135deg, rgba(122,91,255,.32), rgba(99,179,237,.18), transparent, rgba(255,255,255,.08));
+      border-radius:20px;
+      z-index:-1;
+    }
+
+    .auth-box::after{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-120%;
+      width:70%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+      transform:skewX(-18deg);
+      animation:shineSweep 6s linear infinite;
+    }
+
+    .auth-box:hover{
+      transform:translateY(-4px);
+      box-shadow:
+        0 18px 32px rgba(0,0,0,0.18),
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 0 40px rgba(122,91,255,0.18);
+    }
+
+    .form-panel{
+      display:none;
+      animation:fadeSwitch .45s ease;
+    }
+
+    .form-panel.active{
+      display:block;
+    }
+
+    .field{
+      margin-bottom:12px;
+      text-align:left;
+    }
+
+    .field label{
+      display:block;
+      color:#d8d3e2;
+      font-size:10px;
+      margin-bottom:5px;
+    }
+
+    .field input{
+      width:100%;
+      height:36px;
+      border:none;
+      outline:none;
+      border-radius:8px;
+      background:#dfe4ec;
+      padding:0 12px;
+      font-size:12px;
+      color:#222;
+      transition:.3s ease;
+    }
+
+    .field input:focus{
+      background:#ffffff;
+      box-shadow:0 0 0 2px rgba(122,91,255,.45), 0 0 16px rgba(122,91,255,.18);
+      transform:scale(1.01);
+    }
+
+    .pass-box{
+      position:relative;
+      display:flex;
+      align-items:center;
+    }
+
+    .pass-box input{
+      width:100%;
+      padding-right:45px;
+    }
+
+    .eye-btn{
+      position:absolute;
+      right:6px;
+      width:32px;
+      height:32px;
+      border:none;
+      background:transparent;
+      border-radius:50%;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .eye-btn i{
+      font-size:14px;
+      color:#666;
+      transition:all .3s ease;
+    }
+
+    .eye-btn:hover i{
+      color:#7a5bff;
+      transform:scale(1.15);
+      text-shadow:0 0 8px rgba(122,91,255,0.6);
+    }
+
+    .eye-btn::after{
+      content:"";
+      position:absolute;
+      width:0;
+      height:0;
+      border-radius:50%;
+      background:rgba(122,91,255,0.3);
+      transform:translate(-50%, -50%);
+      top:50%;
+      left:50%;
+      opacity:0;
+    }
+
+    .eye-btn:active::after{
+      width:80px;
+      height:80px;
+      opacity:1;
+      transition:0s;
+    }
+
+    .eye-btn:not(:active)::after{
+      transition:.4s ease;
+      opacity:0;
+    }
+
+    .eye-btn.active i{
+      transform:scale(1.3) rotate(12deg);
+      color:#7a5bff;
+    }
+
+    .forgot{
+      text-align:right;
+      color:#d8d3e2;
+      font-size:9px;
+      margin-top:-2px;
+      margin-bottom:16px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .forgot:hover{
+      color:#fff;
+      text-decoration:underline;
+    }
+
+    .btn{
+      width:100%;
+      height:38px;
+      border:none;
+      border-radius:24px;
+      background:linear-gradient(90deg,#eef1f5,#ffffff);
+      color:#1d1533;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.3s ease;
+      margin-top:4px;
+      margin-bottom:14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .btn::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(122,91,255,.18), transparent);
+      transition:.5s;
+    }
+
+    .btn:hover::before{
+      left:100%;
+    }
+
+    .btn:hover{
+      transform:scale(1.04);
+      background:#ffffff;
+      box-shadow:0 0 18px rgba(255,255,255,.18);
+    }
+
+    .btn:active{
+      transform:scale(.98);
+    }
+
+    .switch-text{
+      text-align:center;
+      color:#ffffff;
+      font-size:10px;
+      margin-top:6px;
+    }
+
+    .switch-text span{
+      text-decoration:underline;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .switch-text span:hover{
+      color:#cfc7de;
+    }
+
+    .bottom-text{
+      text-align:center;
+      color:#ffffff;
+      font-size:8px;
+      margin-top:10px;
+      margin-bottom:6px;
+    }
+
+    .icons{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      margin-bottom:4px;
+    }
+
+    .icons img{
+      width:16px;
+      height:16px;
+      object-fit:contain;
+      cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .icons img:hover{
+      transform:scale(1.2) rotate(8deg);
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.35));
+    }
+
+    #message{
+      text-align:center;
+      font-size:11px;
+      margin-top:10px;
+      min-height:16px;
+      color:#fff;
+      animation:fadeSwitch .3s ease;
+    }
+
+    .popup{
+      position:fixed;
+      top:20px;
+      right:20px;
+      background:#24163f;
+      color:#fff;
+      padding:14px 18px;
+      border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.2);
+      font-size:12px;
+      display:none;
+      z-index:1000;
+      animation:slideLeft .4s ease;
+    }
+
+    .strength-wrap{
+      margin-top:8px;
+      margin-bottom:8px;
+    }
+
+    .strength-bar{
+      width:100%;
+      height:6px;
+      background:rgba(255,255,255,0.18);
+      border-radius:20px;
+      overflow:hidden;
+    }
+
+    .strength-fill{
+      height:100%;
+      width:0%;
+      border-radius:20px;
+      transition:.35s ease;
+      background:#ff6b6b;
+    }
+
+    .strength-text{
+      margin-top:5px;
+      font-size:9px;
+      color:#ddd;
+    }
+
+    @keyframes slideDown{
+      from{opacity:0;transform:translateY(-20px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    @keyframes fadeInUp{
+      from{opacity:0;transform:translateY(18px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    @keyframes boxEntry{
+      from{opacity:0;transform:scale(.92);}
+      to{opacity:1;transform:scale(1);}
+    }
+
+    @keyframes floatBox{
+      0%{transform:translateY(0);}
+      50%{transform:translateY(-6px);}
+      100%{transform:translateY(0);}
+    }
+
+    @keyframes fadeSwitch{
+      from{opacity:0;transform:translateY(10px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    @keyframes slideLeft{
+      from{opacity:0;transform:translateX(60px);}
+      to{opacity:1;transform:translateX(0);}
+    }
+
+    @keyframes floatGlow{
+      0%,100%{transform:translateY(0) translateX(0) scale(1);}
+      50%{transform:translateY(-18px) translateX(12px) scale(1.08);}
+    }
+
+    @keyframes gridMove{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(40px);}
+    }
+
+    @keyframes waveMove{
+      0%,100%{transform:translateX(0) translateY(0) rotate(0deg);}
+      50%{transform:translateX(-20px) translateY(-12px) rotate(1deg);}
+    }
+
+    @keyframes twinkle{
+      0%,100%{opacity:.2; transform:scale(.7);}
+      50%{opacity:1; transform:scale(1.5);}
+    }
+
+    @keyframes titleFlow{
+      0%{background-position:0% 50%;}
+      100%{background-position:300% 50%;}
+    }
+
+    @keyframes shineSweep{
+      0%{left:-120%;}
+      100%{left:150%;}
+    }
+
+    @keyframes shakeError{
+      0%{transform:translateX(0);}
+      20%{transform:translateX(-6px);}
+      40%{transform:translateX(6px);}
+      60%{transform:translateX(-4px);}
+      80%{transform:translateX(4px);}
+      100%{transform:translateX(0);}
+    }
+
+    .shake{
+      animation:shakeError .4s ease;
+    }
+
+    @media (max-width:420px){
+      .auth-box{
+        width:92%;
+      }
+
+      .page-title{
+        font-size:18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg-blur bg1"></div>
+  <div class="bg-blur bg2"></div>
+  <div class="bg-blur bg3"></div>
+  <div class="grid-bg"></div>
+  <div class="wave wave1"></div>
+  <div class="wave wave2"></div>
+
+  <div class="sparkles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="brand">Vincera</div>
+
+  <div class="main">
+    <div class="page-title" id="pageTitle">Hola,Welcome Back</div>
+
+    <div class="auth-box">
+
+      <!-- LOGIN -->
+      <div class="form-panel active" id="loginPanel">
+        <div class="field">
+          <label>Email Address</label>
+          <input type="text" id="loginEmail" placeholder="Enter email">
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass-box">
+            <input type="password" id="loginPassword" placeholder="Enter password">
+            <button type="button" class="eye-btn" onclick="togglePassword('loginPassword', this)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="forgot" onclick="forgotPassword()">Forgot Password?</div>
+        <button class="btn" onclick="login()">Log In</button>
+
+        <div class="switch-text">
+          Don't have an account? <span onclick="showSignup()">Sign Up</span>
+        </div>
+
+        <div class="bottom-text">Hate Typing? Try These</div>
+
+        <div class="icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+          <img src="https://cdn-icons-png.flaticon.com/512/0/747.png" alt="Apple">
+          <img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" alt="Microsoft">
+        </div>
+      </div>
+
+      <!-- SIGNUP -->
+      <div class="form-panel" id="signupPanel">
+        <div class="field">
+          <label>Name</label>
+          <input type="text" id="signupName" placeholder="Enter name">
+        </div>
+
+        <div class="field">
+          <label>Email Address</label>
+          <input type="text" id="signupEmail" placeholder="Enter email">
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="pass-box">
+            <input type="password" id="signupPassword" placeholder="Create password" oninput="checkStrength()">
+            <button type="button" class="eye-btn" onclick="togglePassword('signupPassword', this)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="strength-wrap">
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="strength-text" id="strengthText">Password strength</div>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="pass-box">
+            <input type="password" id="confirmPassword" placeholder="Confirm password">
+            <button type="button" class="eye-btn" onclick="togglePassword('confirmPassword', this)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="forgot" onclick="forgotFromSignup()">Forgot Password?</div>
+        <button class="btn" onclick="signup()">Sign Up</button>
+
+        <div class="switch-text">
+          Already have an account? <span onclick="showLogin()">Log In</span>
+        </div>
+
+        <div class="bottom-text">Hate Typing? Try These</div>
+
+        <div class="icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+          <img src="https://cdn-icons-png.flaticon.com/512/0/747.png" alt="Apple">
+          <img src="https://cdn-icons-png.flaticon.com/512/732/732221.png" alt="Microsoft">
+        </div>
+      </div>
+
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <div class="popup" id="popup"></div>
+
+  <script>
+    function showSignup() {
+      document.getElementById("loginPanel").classList.remove("active");
+      document.getElementById("signupPanel").classList.add("active");
+      document.getElementById("pageTitle").innerText = "Create an Account";
+      clearMessage();
+    }
+
+    function showLogin() {
+      document.getElementById("signupPanel").classList.remove("active");
+      document.getElementById("loginPanel").classList.add("active");
+      document.getElementById("pageTitle").innerText = "Hola,Welcome Back";
+      clearMessage();
+    }
+
+    function togglePassword(id, btn) {
+      const input = document.getElementById(id);
+      const icon = btn.querySelector("i");
+
+      btn.classList.add("active");
+      setTimeout(() => btn.classList.remove("active"), 200);
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    function checkStrength() {
+      const password = document.getElementById("signupPassword").value;
+      const fill = document.getElementById("strengthFill");
+      const text = document.getElementById("strengthText");
+
+      let strength = 0;
+      if (password.length >= 6) strength++;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+      if (password.length === 0) {
+        fill.style.width = "0%";
+        text.innerText = "Password strength";
+        return;
+      }
+
+      if (strength <= 2) {
+        fill.style.width = "33%";
+        fill.style.background = "#ff6b6b";
+        text.innerText = "Weak password";
+      } else if (strength <= 4) {
+        fill.style.width = "66%";
+        fill.style.background = "#ffd166";
+        text.innerText = "Medium password";
+      } else {
+        fill.style.width = "100%";
+        fill.style.background = "#7CFC84";
+        text.innerText = "Strong password";
+      }
+    }
+
+    function signup() {
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const message = document.getElementById("message");
+
+      if (name === "" || email === "" || password === "" || confirmPassword === "") {
+        message.style.color = "#ffb3b3";
+        message.innerText = "Please fill all fields";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        message.style.color = "#ffb3b3";
+        message.innerText = "Passwords do not match";
+        return;
+      }
+
+      localStorage.setItem("savedName", name);
+      localStorage.setItem("savedUser", email);
+      localStorage.setItem("savedPass", password);
+
+      message.style.color = "#b8ffb8";
+      message.innerText = "Sign up successful";
+
+      document.getElementById("loginEmail").value = email;
+
+      setTimeout(() => {
+        showLogin();
+        document.getElementById("message").style.color = "#b8ffb8";
+        document.getElementById("message").innerText = "Account created. Please log in.";
+      }, 1000);
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const message = document.getElementById("message");
+      const box = document.querySelector(".auth-box");
+
+      const savedUser = localStorage.getItem("savedUser");
+      const savedPass = localStorage.getItem("savedPass");
+      const savedName = localStorage.getItem("savedName");
+
+      if (email === "" || password === "") {
+        message.style.color = "#ffb3b3";
+        message.innerText = "Please enter email and password";
+        return;
+      }
+
+      if (email === savedUser && password === savedPass) {
+        message.style.color = "#b8ffb8";
+        message.innerText = "Login successful. Welcome " + savedName + "!";
+      } else {
+        message.style.color = "#ff8f8f";
+        message.innerText = "Invalid email or password";
+        box.classList.remove("shake");
+        void box.offsetWidth;
+        box.classList.add("shake");
+      }
+    }
+
+    function forgotPassword() {
+      alert("Forgot password clicked");
+    }
+
+    function forgotFromSignup() {
+      alert("Forgot password clicked");
+    }
+
+    function clearMessage() {
+      document.getElementById("message").innerText = "";
+    }
+  </script>
+
+</body>
+</html>

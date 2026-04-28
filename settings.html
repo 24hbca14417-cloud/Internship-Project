@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vincera Settings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Manrope",sans-serif;
+}
+
+body{
+    background:#0e071f;
+    color:white;
+    min-height:100vh;
+}
+
+.page{
+    max-width:900px;
+    margin:auto;
+    padding:35px 30px 45px;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:700;
+}
+
+.logout{
+    color:white;
+    text-decoration:none;
+    font-size:13px;
+}
+
+h2{
+    margin:22px 0 35px 42px;
+    font-size:16px;
+}
+
+.card{
+    background:#2b263e;
+    border:1px solid #d7d0ee;
+    border-radius:15px;
+    padding:18px 26px;
+    margin-bottom:25px;
+    animation:fadeUp .6s ease both;
+}
+
+.card h3{
+    font-size:15px;
+    margin-bottom:12px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:9px 0;
+    font-size:13px;
+    color:#ddd7e8;
+}
+
+.switch{
+    width:36px;
+    height:17px;
+    background:#05030a;
+    border-radius:20px;
+    position:relative;
+    cursor:pointer;
+}
+
+.switch::after{
+    content:"";
+    width:11px;
+    height:11px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:3px;
+    left:4px;
+    transition:.3s;
+}
+
+.switch.active{
+    background:#45e27c;
+}
+
+.switch.active::after{
+    left:21px;
+}
+
+.select-btn{
+    background:#151022;
+    color:white;
+    border:none;
+    outline:none;
+    border-radius:18px;
+    padding:7px 18px;
+    min-width:145px;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.delete-btn{
+    background:#151022;
+    color:white;
+    border:none;
+    border-radius:5px;
+    padding:9px 38px;
+    cursor:pointer;
+}
+
+/* POPUP */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.50);
+    backdrop-filter:blur(7px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.slide-box{
+    width:430px;
+    background:#0e071f;
+    border-top:4px solid #8d35ff;
+    border-radius:0 0 25px 25px;
+    padding:35px;
+    animation:pop .3s ease;
+}
+
+.slide-box h3{
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.slide-box p{
+    color:#a8a0b8;
+    font-size:15px;
+    margin-bottom:25px;
+}
+
+.option{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin:18px 0;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.option input[type="radio"]{
+    appearance:none;
+    width:13px;
+    height:13px;
+    border:1.5px solid #dcd7eb;
+    border-radius:50%;
+    position:relative;
+}
+
+.option input[type="radio"]:checked::after{
+    content:"";
+    width:7px;
+    height:7px;
+    background:#dcd7eb;
+    border-radius:50%;
+    position:absolute;
+    top:2px;
+    left:2px;
+}
+
+.save-area{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:12px;
+}
+
+.save-btn{
+    width:170px;
+    height:48px;
+    background:transparent;
+    border:2px solid white;
+    border-radius:30px;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.save-btn:hover{
+    background:white;
+    color:#0e071f;
+}
+
+/* LANGUAGE DESIGN */
+.language-box{
+    width:310px;
+    background:#150b25;
+    border-radius:0 0 18px 18px;
+    padding:28px 25px;
+    animation:pop .3s ease;
+}
+
+.language-box h3{
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.lang-option{
+    height:45px;
+    border:1.5px solid #d7d0ee;
+    border-radius:25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    margin-bottom:12px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.lang-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.lang-option input{
+    display:none;
+}
+
+.lang-check{
+    width:16px;
+    height:16px;
+    border:1.5px solid #d7d0ee;
+    border-radius:50%;
+    position:relative;
+}
+
+.lang-option input:checked + .lang-check{
+    background:#c9c4d6;
+}
+
+.lang-option input:checked + .lang-check::after{
+    content:"✓";
+    color:#0e071f;
+    font-size:11px;
+    position:absolute;
+    left:3px;
+    top:0px;
+}
+
+.lang-save{
+    width:100%;
+    height:43px;
+    border:1.5px solid #d7d0ee;
+    border-radius:25px;
+    background:transparent;
+    color:white;
+    cursor:pointer;
+}
+
+/* DELETE DESIGN */
+.delete-box{
+    width:720px;
+    background:#0e071f;
+    padding:55px 65px;
+    animation:pop .3s ease;
+}
+
+.delete-box h2{
+    color:red;
+    text-align:center;
+    font-size:26px;
+    margin:0 0 8px;
+}
+
+.delete-box .delete-sub{
+    color:#aaa2b8;
+    text-align:center;
+    font-size:13px;
+    margin-bottom:32px;
+}
+
+.warning-box{
+    border:1.5px solid #d7d0ee;
+    border-radius:20px;
+    padding:25px 42px;
+    margin-bottom:12px;
+}
+
+.warning-box b{
+    font-size:17px;
+}
+
+.warning-box ul{
+    margin-top:13px;
+    padding-left:22px;
+    line-height:1.8;
+    font-size:15px;
+}
+
+.delete-box input{
+    width:100%;
+    height:55px;
+    background:transparent;
+    border:1.5px solid #d7d0ee;
+    border-radius:25px;
+    padding:0 30px;
+    color:white;
+    outline:none;
+    margin-bottom:10px;
+}
+
+.password-wrap{
+    position:relative;
+}
+
+.password-wrap button{
+    position:absolute;
+    right:22px;
+    top:15px;
+    background:none;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+.delete-actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:5px;
+}
+
+.cancel-btn{
+    width:170px;
+    height:55px;
+    border:1.5px solid #d7d0ee;
+    border-radius:25px;
+    background:transparent;
+    color:white;
+    cursor:pointer;
+}
+
+.danger-btn{
+    width:190px;
+    height:55px;
+    border:none;
+    border-radius:25px;
+    background:red;
+    color:white;
+    cursor:pointer;
+}
+
+/* FINAL CONFIRM */
+.confirm-box{
+    width:430px;
+    background:#0e071f;
+    padding:45px 55px;
+    animation:pop .3s ease;
+}
+
+.confirm-title{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:30px;
+}
+
+.confirm-icon{
+    font-size:42px;
+    color:#9d98aa;
+}
+
+.confirm-title h3{
+    font-size:15px;
+}
+
+.confirm-title p{
+    font-size:11px;
+    color:#aaa2b8;
+}
+
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:white;
+    color:#0e071f;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+}
+
+.user-info h4{
+    font-size:14px;
+}
+
+.user-info p{
+    color:#aaa2b8;
+    font-size:12px;
+}
+
+.confirm-btn{
+    width:100%;
+    height:45px;
+    background:#24d261;
+    color:white;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    margin-bottom:12px;
+    font-weight:700;
+}
+
+.confirm-cancel{
+    width:100%;
+    height:45px;
+    background:transparent;
+    color:white;
+    border:1.5px solid #d7d0ee;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+@keyframes pop{
+    from{opacity:0; transform:scale(.85);}
+    to{opacity:1; transform:scale(1);}
+}
+
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(18px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@media(max-width:650px){
+    .page{
+        padding:25px 15px;
+    }
+
+    .slide-box,
+    .delete-box,
+    .confirm-box{
+        width:90%;
+        padding:30px 25px;
+    }
+
+    .delete-actions{
+        gap:10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="top">
+        <div class="logo">Vincera</div>
+        <a href="D:\intership\login page.html" class="logout">↩ logout</a>
+    </div>
+
+    <h2>Settings</h2>
+
+    <div class="card">
+        <h3>Notifications</h3>
+        <div class="row">Meeting Alerts <span class="switch active"></span></div>
+        <div class="row">Chat Notifications <span class="switch active"></span></div>
+        <div class="row">Email Notifications <span class="switch active"></span></div>
+    </div>
+
+    <div class="card">
+        <h3>Privacy and Security</h3>
+        <div class="row">Show Online Status <span class="switch active"></span></div>
+        <div class="row">Allow Screen Recording <span class="switch active"></span></div>
+        <div class="row">Two-Factor Authentication <span class="switch active"></span></div>
+    </div>
+
+    <div class="card">
+        <h3>Meeting Controls</h3>
+        <div class="row">Mute on Join <span class="switch active"></span></div>
+        <div class="row">Turn Off Video on Join <span class="switch active"></span></div>
+        <div class="row">Enable Waiting Room <span class="switch active"></span></div>
+    </div>
+
+    <div class="card">
+        <h3>Audio & Video</h3>
+        <div class="row">
+            Microphone
+            <button class="select-btn" id="micBtn" onclick="openMic()">Default Mic ▾</button>
+        </div>
+        <div class="row">
+            Camera
+            <button class="select-btn" id="camBtn" onclick="openCamera()">Default Camera ▾</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Recording</h3>
+        <div class="row">Auto Record Meeting <span class="switch"></span></div>
+    </div>
+
+    <div class="card">
+        <h3>Accessibility</h3>
+        <div class="row">Enable Live Captions <span class="switch"></span></div>
+        <div class="row">
+            Caption Language
+            <button class="select-btn" id="langBtn" onclick="openLanguage()">Select Language ▾</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Advanced</h3>
+        <div class="row">Enable Noise Suppression <span class="switch active"></span></div>
+        <div class="row">Enable Background Blur <span class="switch active"></span></div>
+    </div>
+
+    <div class="card">
+        <h3>Account</h3>
+        <div class="row">
+            Delete Account
+            <button class="delete-btn" onclick="openDelete()">Delete</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- MICROPHONE POPUP -->
+<div class="overlay" id="micOverlay">
+    <div class="slide-box">
+        <h3>Default Microphone</h3>
+        <p>Select your preferred microphone:</p>
+
+        <label class="option">
+            <input type="radio" name="mic" value="Internal Microphone" checked>
+            Internal Microphone
+        </label>
+
+        <label class="option">
+            <input type="radio" name="mic" value="Headset Microphone">
+            Headset Microphone
+        </label>
+
+        <label class="option">
+            <input type="radio" name="mic" value="External USB Mic">
+            External USB Mic
+        </label>
+
+        <div class="save-area">
+            <button class="save-btn" onclick="saveMic()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- CAMERA POPUP -->
+<div class="overlay" id="cameraOverlay">
+    <div class="slide-box">
+        <h3>Default Camera</h3>
+        <p>Select your preferred camera:</p>
+
+        <label class="option">
+            <input type="radio" name="cam" value="Front Camera">
+            Front Camera
+        </label>
+
+        <label class="option">
+            <input type="radio" name="cam" value="External Webcam" checked>
+            External Webcam
+        </label>
+
+        <label class="option">
+            <input type="radio" name="cam" value="Virtual Camera">
+            Virtual Camera
+        </label>
+
+        <div class="save-area">
+            <button class="save-btn" onclick="saveCamera()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- LANGUAGE POPUP -->
+<div class="overlay" id="languageOverlay">
+    <div class="language-box">
+        <h3>Selected Language</h3>
+
+        <label class="lang-option">
+            <div class="lang-left">⚑ English (US)</div>
+            <input type="radio" name="lang" value="English (US)" checked>
+            <span class="lang-check"></span>
+        </label>
+
+        <h3 style="margin-top:20px;">All Language</h3>
+
+        <label class="lang-option">
+            <div class="lang-left">⚑ French</div>
+            <input type="radio" name="lang" value="French">
+            <span class="lang-check"></span>
+        </label>
+
+        <label class="lang-option">
+            <div class="lang-left">⚑ German</div>
+            <input type="radio" name="lang" value="German">
+            <span class="lang-check"></span>
+        </label>
+
+        <label class="lang-option">
+            <div class="lang-left">⚑ Japanese</div>
+            <input type="radio" name="lang" value="Japanese">
+            <span class="lang-check"></span>
+        </label>
+
+        <label class="lang-option">
+            <div class="lang-left">⚑ Malayalam</div>
+            <input type="radio" name="lang" value="Malayalam">
+            <span class="lang-check"></span>
+        </label>
+
+        <button class="lang-save" onclick="saveLanguage()">Save Settings ✓</button>
+    </div>
+</div>
+
+<!-- DELETE ACCOUNT POPUP -->
+<div class="overlay" id="deleteOverlay">
+    <div class="delete-box">
+        <h2>Delete Account</h2>
+        <p class="delete-sub">This action is irreversible. Please confirm carefully.</p>
+
+        <div class="warning-box">
+            <b>You will lose:</b>
+            <ul>
+                <li>All meetings & recordings</li>
+                <li>Account settings & preferences</li>
+                <li>Chat history</li>
+            </ul>
+        </div>
+
+        <input type="text" id="deleteText" placeholder="Type DELETE to confirm">
+
+        <div class="password-wrap">
+            <input type="password" id="deletePass" placeholder="Enter your password">
+            <button onclick="toggleDeletePass()">Show</button>
+        </div>
+
+        <div class="delete-actions">
+            <button class="cancel-btn" onclick="closeSlides()">Cancel</button>
+            <button class="danger-btn" onclick="openFinalConfirm()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- FINAL DELETE CONFIRM -->
+<div class="overlay" id="finalDeleteOverlay">
+    <div class="confirm-box">
+        <div class="confirm-title">
+            <div class="confirm-icon">👤×</div>
+            <div>
+                <h3>Delete Confirm</h3>
+                <p>Please confirm that you wish to delete this account.</p>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <div class="avatar">M</div>
+            <div>
+                <h4>Miana</h4>
+                <p>miaanaa123@gmail.com</p>
+            </div>
+        </div>
+
+        <button class="confirm-btn" onclick="deleteDone()">Confirm</button>
+        <button class="confirm-cancel" onclick="closeSlides()">Cancel</button>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll(".switch").forEach(sw=>{
+    sw.addEventListener("click",()=>{
+        sw.classList.toggle("active");
+    });
+});
+
+function closeSlides(){
+    document.querySelectorAll(".overlay").forEach(o=>{
+        o.classList.remove("show");
+    });
+}
+
+function openMic(){
+    closeSlides();
+    document.getElementById("micOverlay").classList.add("show");
+}
+
+function openCamera(){
+    closeSlides();
+    document.getElementById("cameraOverlay").classList.add("show");
+}
+
+function openLanguage(){
+    closeSlides();
+    document.getElementById("languageOverlay").classList.add("show");
+}
+
+function openDelete(){
+    closeSlides();
+    document.getElementById("deleteOverlay").classList.add("show");
+}
+
+function saveMic(){
+    let selectedMic = document.querySelector('input[name="mic"]:checked').value;
+    document.getElementById("micBtn").innerText = selectedMic + " ▾";
+    closeSlides();
+}
+
+function saveCamera(){
+    let selectedCam = document.querySelector('input[name="cam"]:checked').value;
+    document.getElementById("camBtn").innerText = selectedCam + " ▾";
+    closeSlides();
+}
+
+function saveLanguage(){
+    let selectedLang = document.querySelector('input[name="lang"]:checked').value;
+    document.getElementById("langBtn").innerText = selectedLang + " ▾";
+    closeSlides();
+}
+
+function toggleDeletePass(){
+    let pass = document.getElementById("deletePass");
+    let btn = event.target;
+
+    if(pass.type === "password"){
+        pass.type = "text";
+        btn.innerText = "Hide";
+    }else{
+        pass.type = "password";
+        btn.innerText = "Show";
+    }
+}
+
+function openFinalConfirm(){
+    let text = document.getElementById("deleteText").value;
+    let pass = document.getElementById("deletePass").value;
+
+    if(text !== "DELETE"){
+        alert("Please type DELETE to confirm");
+        return;
+    }
+
+    if(pass === ""){
+        alert("Please enter your password");
+        return;
+    }
+
+    closeSlides();
+    document.getElementById("finalDeleteOverlay").classList.add("show");
+}
+
+function deleteDone(){
+    // clear stored data
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // optional message
+    alert("Account deleted successfully");
+
+    // redirect to login page
+   window.location.href = "file:///D:/intership/login%20page.html";
+}
+
+document.querySelectorAll(".overlay").forEach(overlay=>{
+    overlay.addEventListener("click",function(e){
+        if(e.target === overlay){
+            closeSlides();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

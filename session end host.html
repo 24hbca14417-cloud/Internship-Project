@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Session Ended</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Manrope",sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#10091f;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow-x:hidden;
+}
+
+.page{
+  width:100%;
+  max-width:1100px;
+  padding:95px 32px 35px;
+  animation:pageIn .8s ease;
+}
+
+@keyframes pageIn{
+  from{opacity:0; transform:translateY(25px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:35px;
+}
+
+.header h1{
+  font-size:38px;
+  font-weight:800;
+  line-height:.9;
+  text-shadow:0 0 18px rgba(255,255,255,.25);
+}
+
+.header h2{
+  font-size:25px;
+  font-weight:800;
+  line-height:.95;
+}
+
+.header p{
+  font-size:12px;
+  font-weight:700;
+  color:#d5cfdf;
+}
+
+/* ATTENTION CARD */
+.attention-card{
+  background:#f7f7f7;
+  color:#111;
+  height:352px;
+  border-radius:10px;
+  padding:18px 34px;
+  margin-bottom:42px;
+  box-shadow:0 0 22px rgba(255,255,255,.12);
+  animation:cardPop .7s ease;
+}
+
+@keyframes cardPop{
+  from{opacity:0; transform:scale(.96);}
+  to{opacity:1; transform:scale(1);}
+}
+
+.card-label{
+  font-size:12px;
+  color:#777;
+  font-weight:600;
+  margin-bottom:25px;
+}
+
+.user-row{
+  display:grid;
+  grid-template-columns:170px 1fr 35px;
+  align-items:center;
+  margin-bottom:28px;
+}
+
+.user-name{
+  font-size:12px;
+  color:#777;
+  font-weight:700;
+  text-align:right;
+  padding-right:38px;
+}
+
+.progress{
+  height:8px;
+  background:#bcbcbc;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  width:0;
+  background:#050505;
+  border-radius:20px;
+  transition:1.3s ease;
+}
+
+.percent{
+  font-size:8px;
+  color:#111;
+  font-weight:700;
+  padding-left:5px;
+}
+
+/* INFO */
+.info-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  margin-bottom:20px;
+}
+
+.info-card{
+  height:100px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:10px;
+  padding:16px;
+  background:rgba(255,255,255,.02);
+  transition:.3s;
+}
+
+.info-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 18px rgba(255,255,255,.15);
+  border-color:white;
+}
+
+.info-label{
+  font-size:8px;
+  color:#aaa;
+  font-weight:700;
+  margin-bottom:27px;
+}
+
+.info-card h3{
+  font-size:20px;
+  font-weight:800;
+}
+
+/* FEEDBACK */
+.feedback{
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:10px;
+  min-height:390px;
+  padding:18px 18px 35px;
+  margin-bottom:35px;
+  background:rgba(255,255,255,.02);
+  transition:.3s;
+}
+
+.feedback.error{
+  animation:shake .35s ease;
+  border-color:#ff4d4d;
+  box-shadow:0 0 18px rgba(255,77,77,.45);
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-8px);}
+  50%{transform:translateX(8px);}
+  75%{transform:translateX(-5px);}
+}
+
+.feedback-title{
+  font-size:16px;
+  color:#aaa;
+  font-weight:700;
+}
+
+.feedback-options{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  margin:30px 0 43px;
+}
+
+.feedback-option{
+  width:120px;
+  height:80px;
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.feedback-option:hover{
+  transform:translateY(-4px) scale(1.08);
+  background:rgba(255,255,255,.07);
+  box-shadow:0 0 16px rgba(255,255,255,.15);
+}
+
+.feedback-option.active{
+  background:rgba(255,255,255,.13);
+  box-shadow:0 0 20px rgba(255,255,255,.22);
+}
+
+.emoji{
+  font-size:38px;
+  margin-bottom:12px;
+}
+
+.feedback-option.active .emoji{
+  animation:bounce .6s ease;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+.feedback-option p{
+  font-size:12px;
+  font-weight:800;
+}
+
+.comment-box{
+  display:block;
+  width:90%;
+  height:155px;
+  margin:0 auto;
+  background:transparent;
+  border:1px solid rgba(255,255,255,.32);
+  border-radius:10px;
+  color:white;
+  outline:none;
+  resize:none;
+  padding:23px 25px;
+  font-size:15px;
+  transition:.3s;
+}
+
+.comment-box::placeholder{
+  color:white;
+  font-size:12px;
+}
+
+.comment-box:focus{
+  border-color:white;
+  box-shadow:0 0 18px rgba(255,255,255,.16);
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:35px;
+}
+
+button{
+  cursor:pointer;
+  transition:.25s;
+}
+
+.start-btn{
+  width:200px;
+  height:42px;
+  background:#fff;
+  color:#111;
+  border:none;
+  border-radius:13px;
+  font-size:14px;
+  font-weight:800;
+  box-shadow:0 0 14px rgba(255,255,255,.22);
+}
+
+.home-btn{
+  width:95px;
+  height:42px;
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:13px;
+  font-size:14px;
+  font-weight:700;
+}
+
+button:hover{
+  transform:translateY(-3px) scale(1.04);
+  box-shadow:0 0 20px rgba(255,255,255,.25);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#fff;
+  color:#111;
+  padding:11px 18px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:800;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:999;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:700px){
+  .page{
+    padding:45px 20px 25px;
+  }
+
+  .header h1{
+    font-size:30px;
+  }
+
+  .attention-card{
+    height:auto;
+  }
+
+  .user-row{
+    grid-template-columns:70px 1fr 30px;
+  }
+
+  .user-name{
+    padding-right:10px;
+  }
+
+  .info-row{
+    grid-template-columns:1fr;
+  }
+
+  .comment-box{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <h1>Session Ended.</h1>
+    <h2>That’s A Wrap.</h2>
+    <p>Here’s your AI-generated recap.</p>
+  </div>
+
+  <div class="attention-card">
+    <div class="card-label">⏱ ATTENTION SCORE</div>
+
+    <div class="user-row">
+      <div class="user-name">USER 1</div>
+      <div class="progress"><div class="progress-fill" data-value="98"></div></div>
+      <div class="percent">98%</div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-name">USER 2</div>
+      <div class="progress"><div class="progress-fill" data-value="95"></div></div>
+      <div class="percent">95%</div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-name">USER 3</div>
+      <div class="progress"><div class="progress-fill" data-value="100"></div></div>
+      <div class="percent">100%</div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-name">USER 4</div>
+      <div class="progress"><div class="progress-fill" data-value="95"></div></div>
+      <div class="percent">95%</div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-name">USER 5</div>
+      <div class="progress"><div class="progress-fill" data-value="95"></div></div>
+      <div class="percent">95%</div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-name">USER 6</div>
+      <div class="progress"><div class="progress-fill" data-value="98"></div></div>
+      <div class="percent">98%</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="info-label">⏱ DURATION</div>
+      <h3 id="durationText">1h 25m 23s</h3>
+    </div>
+
+    <div class="info-card">
+      <div class="info-label">👥 PARTICIPANTS</div>
+      <h3 id="participantsText">8</h3>
+    </div>
+  </div>
+
+  <div class="feedback">
+    <div class="feedback-title">GIVE US A FEEDBACK</div>
+
+    <div class="feedback-options">
+      <div class="feedback-option" onclick="selectFeedback(this,'Loved it 🔥')">
+        <div class="emoji">🔥</div>
+        <p>LOVED IT!</p>
+      </div>
+
+      <div class="feedback-option" onclick="selectFeedback(this,'Good 👍')">
+        <div class="emoji">👍</div>
+        <p>GOOD!</p>
+      </div>
+
+      <div class="feedback-option" onclick="selectFeedback(this,'Not really good 😴')">
+        <div class="emoji">🥱</div>
+        <p>NOT REALLY GOOD</p>
+      </div>
+    </div>
+
+    <textarea 
+      class="comment-box" 
+      id="commentBox" 
+      placeholder="Anything You Wanna Add? (Optional)"></textarea>
+  </div>
+
+  <div class="buttons">
+    <button class="start-btn" onclick="startNewMeeting()">↻ Start New Meeting</button>
+    <button class="home-btn" onclick="goHome()">⌂ Home</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let selectedFeedback = "";
+
+/* Meeting data */
+function formatDuration(ms){
+  let totalSeconds = Math.floor(ms / 1000);
+  let hours = Math.floor(totalSeconds / 3600);
+  let minutes = Math.floor((totalSeconds % 3600) / 60);
+  let seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function updateMeetingData(){
+  const startTime = Number(localStorage.getItem("meetingStartTime"));
+  const endTime = Number(localStorage.getItem("meetingEndTime")) || Date.now();
+  const participants = localStorage.getItem("participantsCount");
+
+  if(startTime){
+    document.getElementById("durationText").innerText = formatDuration(endTime - startTime);
+  }
+
+  if(participants){
+    document.getElementById("participantsText").innerText = participants;
+  }
+}
+
+/* Attention bars */
+function animateAttentionBars(){
+  document.querySelectorAll(".progress-fill").forEach(fill => {
+    const value = fill.getAttribute("data-value");
+    setTimeout(() => {
+      fill.style.width = value + "%";
+    }, 300);
+  });
+}
+
+/* Toast */
+function showToast(message){
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1800);
+}
+
+/* Feedback mandatory */
+function selectFeedback(element, value){
+  selectedFeedback = value;
+
+  document.querySelectorAll(".feedback-option").forEach(option => {
+    option.classList.remove("active");
+  });
+
+  element.classList.add("active");
+  document.querySelector(".feedback").classList.remove("error");
+
+  showToast("Feedback selected: " + value);
+}
+
+function checkFeedback(){
+  if(selectedFeedback === ""){
+    const feedbackBox = document.querySelector(".feedback");
+    feedbackBox.classList.add("error");
+
+    showToast("⚠ Please select feedback before continuing");
+
+    setTimeout(() => {
+      feedbackBox.classList.remove("error");
+    }, 1500);
+
+    return false;
+  }
+
+  return true;
+}
+
+/* Save report */
+function saveSessionReport(){
+  const attentionUsers = [];
+
+  document.querySelectorAll(".user-row").forEach(row => {
+    attentionUsers.push({
+      user: row.querySelector(".user-name").innerText,
+      score: row.querySelector(".percent").innerText
+    });
+  });
+
+  const report = {
+    duration: document.getElementById("durationText").innerText,
+    participants: document.getElementById("participantsText").innerText,
+    attentionUsers: attentionUsers,
+    feedback: selectedFeedback,
+    comment: document.getElementById("commentBox").value.trim(),
+    savedAt: new Date().toLocaleString()
+  };
+
+  localStorage.setItem("lastSessionReport", JSON.stringify(report));
+  console.log("Session Report:", report);
+}
+
+/* Buttons */
+function startNewMeeting(){
+  if(!checkFeedback()) return;
+
+  saveSessionReport();
+
+  localStorage.setItem("meetingStartTime", Date.now());
+  localStorage.removeItem("meetingEndTime");
+
+  showToast("Starting new meeting...");
+
+  setTimeout(() => {
+    window.location.href = "meeting.html";
+  }, 900);
+}
+
+function goHome(){
+  if(!checkFeedback()) return;
+
+  saveSessionReport();
+
+  showToast("Going home...");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 900);
+}
+
+/* Page load */
+window.onload = function(){
+  updateMeetingData();
+  animateAttentionBars();
+};
+</script>
+
+</body>
+</html>

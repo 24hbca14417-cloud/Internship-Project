@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Session Ended</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Manrope",sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#10091f;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  width:380px;
+  height:380px;
+  background:rgba(134,73,255,.25);
+  filter:blur(80px);
+  border-radius:50%;
+  top:-120px;
+  left:-80px;
+  animation:glowMove 6s infinite alternate ease-in-out;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:320px;
+  height:320px;
+  background:rgba(255,255,255,.08);
+  filter:blur(80px);
+  border-radius:50%;
+  right:-90px;
+  bottom:-80px;
+  animation:glowMove 7s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes glowMove{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(35px,25px) scale(1.15);}
+}
+
+.page{
+  width:100%;
+  max-width:720px;
+  padding:35px 22px 10px;
+  position:relative;
+  z-index:2;
+  animation:pageFade .8s ease;
+}
+
+@keyframes pageFade{
+  from{opacity:0; transform:translateY(25px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.header{
+  text-align:center;
+  margin-bottom:27px;
+}
+
+.header h1{
+  font-size:28px;
+  font-weight:800;
+  line-height:.95;
+  text-shadow:0 0 18px rgba(255,255,255,.28);
+}
+
+.header h2{
+  font-size:17px;
+  font-weight:800;
+  line-height:.9;
+}
+
+.header p{
+  font-size:7px;
+  font-weight:700;
+  color:#cfc9d9;
+}
+
+/* SCORE CARD */
+.score-card{
+  height:113px;
+  background:#f7f7f7;
+  color:#111;
+  border-radius:8px;
+  padding:15px 45px 15px 80px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+  box-shadow:0 0 22px rgba(255,255,255,.13);
+  animation:cardPop .7s ease;
+}
+
+@keyframes cardPop{
+  from{opacity:0; transform:scale(.94);}
+  to{opacity:1; transform:scale(1);}
+}
+
+.score-left{
+  text-align:center;
+}
+
+.label{
+  font-size:7px;
+  color:#777;
+  font-weight:700;
+}
+
+.score{
+  font-size:42px;
+  font-weight:800;
+  line-height:.95;
+  animation:pulseScore 2s infinite ease-in-out;
+}
+
+@keyframes pulseScore{
+  0%,100%{text-shadow:0 0 0 rgba(0,0,0,0);}
+  50%{text-shadow:0 0 10px rgba(0,0,0,.28);}
+}
+
+.status{
+  font-size:10px;
+  color:#777;
+}
+
+.bars{
+  width:56%;
+}
+
+.bar-title{
+  font-size:7px;
+  color:#777;
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.bar{
+  height:5px;
+  background:#aaa;
+  border-radius:50px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.fill{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#111,#555,#111);
+  border-radius:50px;
+  transition:1.4s ease;
+}
+
+/* INFO */
+.info-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-bottom:13px;
+}
+
+.info-card{
+  height:65px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:8px;
+  padding:9px 11px;
+  transition:.3s;
+  background:rgba(255,255,255,.03);
+  backdrop-filter:blur(6px);
+}
+
+.info-card:hover{
+  transform:translateY(-4px);
+  border-color:white;
+  box-shadow:0 0 18px rgba(255,255,255,.18);
+}
+
+.small-label{
+  font-size:7px;
+  color:#aaa;
+  font-weight:700;
+  margin-bottom:13px;
+}
+
+.info-card h3{
+  font-size:14px;
+  font-weight:800;
+}
+
+/* FEEDBACK */
+.feedback{
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:8px;
+  padding:8px 10px;
+  min-height:150px;
+  margin-bottom:17px;
+  background:rgba(255,255,255,.03);
+  transition:.3s;
+}
+
+.feedback-title{
+  font-size:10px;
+  color:#aaa;
+  font-weight:700;
+}
+
+.feedback-options{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  margin-top:10px;
+}
+
+.feedback-option{
+  width:90px;
+  height:62px;
+  border-radius:8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.feedback-option:hover{
+  transform:scale(1.1) translateY(-2px);
+  background:rgba(255,255,255,.08);
+  box-shadow:0 0 14px rgba(255,255,255,.13);
+}
+
+.feedback-option.active{
+  background:rgba(255,255,255,.15);
+  box-shadow:0 0 18px rgba(255,255,255,.25);
+}
+
+.emoji{
+  font-size:24px;
+  margin-bottom:7px;
+}
+
+.feedback-option.active .emoji{
+  animation:bounce .6s ease;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+.feedback-option p{
+  font-size:6px;
+  font-weight:800;
+}
+
+.comment-box{
+  margin:12px auto 0;
+  display:block;
+  width:95%;
+  height:80px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:5px;
+  padding:9px;
+  color:white;
+  font-size:9px;
+  outline:none;
+  resize:none;
+  background:rgba(255,255,255,.03);
+  transition:.3s;
+}
+
+.comment-box::placeholder{
+  color:#aaa;
+  font-size:9px;
+}
+
+.comment-box:focus{
+  border-color:white;
+  box-shadow:0 0 15px rgba(255,255,255,.18);
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+}
+
+button{
+  cursor:pointer;
+  transition:.25s;
+}
+
+.start-btn{
+  width:120px;
+  height:30px;
+  background:#fff;
+  color:#111;
+  border:none;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:800;
+  box-shadow:0 0 15px rgba(255,255,255,.22);
+}
+
+.home-btn{
+  width:68px;
+  height:38px;
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:10px;
+  font-size:11px;
+  font-weight:700;
+}
+
+button:hover{
+  transform:translateY(-3px) scale(1.04);
+  box-shadow:0 0 20px rgba(255,255,255,.25);
+}
+
+.toast{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#fff;
+  color:#111;
+  padding:10px 18px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:5;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:600px){
+  .score-card{
+    padding:16px 25px;
+  }
+
+  .bars{
+    width:50%;
+  }
+
+  .info-row{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <h1>Session Ended.</h1>
+    <h2>That’s A Wrap.</h2>
+    <p>Here’s your AI-generated recap.</p>
+  </div>
+
+  <div class="score-card">
+    <div class="score-left">
+      <div class="label">ATTENTION SCORE</div>
+      <div class="score">90%</div>
+      <div class="status">Locked In</div>
+    </div>
+
+    <div class="bars">
+      <div class="bar-title">FOCUS</div>
+      <div class="bar">
+        <div class="fill" id="focusBar"></div>
+      </div>
+
+      <div class="bar-title">ENGAGEMENT</div>
+      <div class="bar">
+        <div class="fill" id="engageBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="small-label">⏱ DURATION</div>
+      <h3>00h 00m 00s</h3>
+    </div>
+
+    <div class="info-card">
+      <div class="small-label">👥 PARTICIPANTS</div>
+      <h3>0</h3>
+    </div>
+  </div>
+
+  <div class="feedback">
+    <div class="feedback-title">GIVE US A FEEDBACK</div>
+
+    <div class="feedback-options">
+      <div class="feedback-option" onclick="selectFeedback(this,'Loved it 🔥')">
+        <div class="emoji">🔥</div>
+        <p>LOVED IT!</p>
+      </div>
+
+      <div class="feedback-option" onclick="selectFeedback(this,'Good 👍')">
+        <div class="emoji">👍</div>
+        <p>GOOD!</p>
+      </div>
+
+      <div class="feedback-option" onclick="selectFeedback(this,'Not really good 😴')">
+        <div class="emoji">😴</div>
+        <p>NOT REALLY GOOD</p>
+      </div>
+    </div>
+
+    <textarea 
+      class="comment-box" 
+      id="commentBox" 
+      placeholder="Anything You Wanna Add Perhaps? (optional)"></textarea>
+  </div>
+
+  <div class="buttons">
+    <button class="start-btn" onclick="startNewMeeting()">↻ Start New Meeting</button>
+    <button class="home-btn" onclick="goHome()">⌂ Home</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let selectedFeedback = "";
+
+let focusValue = 82;
+let engagementValue = 88;
+
+function calculateScore(){
+  return Math.round((focusValue + engagementValue) / 2);
+}
+
+function formatDuration(ms){
+  let totalSeconds = Math.floor(ms / 1000);
+
+  let hours = Math.floor(totalSeconds / 3600);
+  let minutes = Math.floor((totalSeconds % 3600) / 60);
+  let seconds = totalSeconds % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function updateMeetingData(){
+  const startTime = Number(localStorage.getItem("meetingStartTime"));
+  const endTime = Number(localStorage.getItem("meetingEndTime")) || Date.now();
+  const participants = localStorage.getItem("participantsCount") || "0";
+
+  if(startTime){
+    document.getElementById("durationText").innerText =
+      formatDuration(endTime - startTime);
+  }else{
+    document.getElementById("durationText").innerText = "0h 0m 0s";
+  }
+
+  document.getElementById("participantsText").innerText = participants;
+}
+
+function updateScoreUI(){
+  const attention = calculateScore();
+
+  document.getElementById("focusBar").style.width = focusValue + "%";
+  document.getElementById("engageBar").style.width = engagementValue + "%";
+  document.querySelector(".score").innerText = attention + "%";
+
+  if(attention >= 85){
+    document.querySelector(".status").innerText = "Locked In 🔥";
+  }else if(attention >= 65){
+    document.querySelector(".status").innerText = "Good 👍";
+  }else if(attention >= 40){
+    document.querySelector(".status").innerText = "Average ⚠";
+  }else{
+    document.querySelector(".status").innerText = "Low 😴";
+  }
+}
+
+window.onload = function(){
+  updateMeetingData();
+
+  setTimeout(() => {
+    updateScoreUI();
+  }, 300);
+};
+
+function showToast(message){
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1800);
+}
+
+function selectFeedback(element, value){
+  selectedFeedback = value;
+
+  document.querySelectorAll(".feedback-option").forEach(option => {
+    option.classList.remove("active");
+  });
+
+  element.classList.add("active");
+  showToast("Feedback selected: " + value);
+}
+
+function checkFeedback(){
+  if(selectedFeedback === ""){
+    showToast("⚠ Please select feedback before continuing");
+
+    const feedbackBox = document.querySelector(".feedback");
+    feedbackBox.classList.add("error");
+
+    setTimeout(() => {
+      feedbackBox.classList.remove("error");
+    }, 500);
+
+    return false;
+  }
+
+  return true;
+}
+
+function cleanComment(){
+  return document.getElementById("commentBox").value.trim();
+}
+
+function saveSessionReport(){
+  const report = {
+    duration: document.getElementById("durationText").innerText,
+    participants: document.getElementById("participantsText").innerText,
+    focus: focusValue,
+    engagement: engagementValue,
+    attention: calculateScore(),
+    feedback: selectedFeedback,
+    comment: cleanComment(),
+    savedAt: new Date().toLocaleString()
+  };
+
+  localStorage.setItem("lastSessionReport", JSON.stringify(report));
+  console.log("Session Report:", report);
+}
+
+function startNewMeeting(){
+  if(!checkFeedback()) return;
+
+  saveSessionReport();
+
+  localStorage.setItem("meetingStartTime", Date.now());
+  localStorage.removeItem("meetingEndTime");
+
+  showToast("Starting new meeting...");
+
+  setTimeout(() => {
+    window.location.href = "meeting.html";
+  }, 900);
+}
+
+function goHome(){
+  if(!checkFeedback()) return;
+
+  saveSessionReport();
+
+  showToast("Going home...");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 900);
+}
+</script>
+
+</body>
+</html>
