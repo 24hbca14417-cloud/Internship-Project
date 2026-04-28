@@ -82,6 +82,7 @@ body{
 /* NEW PROFILE DESIGN */
 .profile-new-design{
     min-height:570px;
+    min-width: 570px;
     border:1.3px solid rgba(255,255,255,.75);
     border-radius:18px;
     padding:45px 60px;
@@ -277,11 +278,11 @@ body{
 
 .edit-avatar-btn{
     position:absolute;
-    top:145px;
-    right:90px;
-    width:34px;
-    height:34px;
-    border-radius:50%;
+    top:143px;
+    left:53%;
+    width:32px;
+    height:30px;
+    border-radius:48%;
     border:none;
     background:white;
     color:#111;
@@ -289,7 +290,14 @@ body{
     font-size:16px;
     transition:.3s;
 }
-
+.edit-icon {
+    position:relative;
+    width: 18px;   
+    height: 15px;
+    object-fit: contain;
+    top: 5%;
+     
+}
 .edit-avatar-btn:hover{
     transform:scale(1.1);
 }
@@ -420,7 +428,109 @@ body{
     .edit-avatar-btn{
         position:static;
         margin-top:-25px;
+          background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     }
+}
+.phone-box {
+  position: relative;
+  width: 420px;
+  height: 48px;
+}
+
+.phone-box input {
+  width: 160%;
+  height: 48px;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  background: #2b2146;
+  color: white;
+  padding-left: 82px;
+  font-size: 14px;
+}
+
+.flag-section {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 5;
+  border-right: 2px solid rgba(255,255,255,0.25);
+}
+
+.flag-section img {
+  width: 20px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.arrow {
+  color: #cfc9dc;
+  font-size: 12px;
+
+  /* MOVE UP */
+  position: relative;
+  top: -4px;   /* adjust: -3px / -5px if needed */
+}
+
+.country-dropdown {
+  display: none;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 250px;
+  background: #17102d;
+  border-radius: 16px;
+  padding: 10px;
+  z-index: 50;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+
+  /* IMPORTANT */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search input */
+.country-dropdown input {
+  width: 100%;
+  height: 36px;
+  padding-left: 12px;
+  border-radius: 10px;
+  background: #2b2146;
+  margin-bottom: 6px; /* small gap only */
+  border: none;
+  outline: none;
+  color: white;
+}
+
+/* Country list */
+.country-list {
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 0;   /* REMOVE extra space */
+  padding-top: 0;  /* REMOVE extra space */
+}
+
+
+.country-list div:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.country-list img {
+  width: 24px;
+  height: 17px;
+  border-radius: 30px;
+  object-fit: cover;
 }
 </style>
 </head>
@@ -475,47 +585,29 @@ body{
                 </div>
 
                 <label>Phone Number</label>
-                <div class="phone-box">
-                    <div class="flag-section" onclick="toggleCountryDropdown()">
-                        <span id="selectedFlag">🇮🇳</span>
-                        <span class="arrow">⌄</span>
-                    </div>
 
-                    <input id="phoneInput" type="text" value="+91 1234567899">
+<div class="phone-box">
+  <div class="flag-section" onclick="toggleCountryDropdown()">
+    <img id="selectedFlag" src="https://flagcdn.com/w40/in.png" alt="India">
+    <span class="arrow">⌄</span>
+  </div>
 
-                    <div class="country-dropdown" id="countryDropdown">
-                        <input type="text" id="countrySearch" placeholder="Search country..." onkeyup="filterCountries()">
+  <input id="phoneInput" type="text" value="+91 1234567899">
 
-                        <div class="country-list">
-                            <div onclick="selectCountry('🇮🇳','+91')">🇮🇳 India +91</div>
-                            <div onclick="selectCountry('🇺🇸','+1')">🇺🇸 United States +1</div>
-                            <div onclick="selectCountry('🇬🇧','+44')">🇬🇧 United Kingdom +44</div>
-                            <div onclick="selectCountry('🇦🇪','+971')">🇦🇪 UAE +971</div>
-                            <div onclick="selectCountry('🇦🇺','+61')">🇦🇺 Australia +61</div>
-                            <div onclick="selectCountry('🇨🇦','+1')">🇨🇦 Canada +1</div>
-                            <div onclick="selectCountry('🇯🇵','+81')">🇯🇵 Japan +81</div>
-                            <div onclick="selectCountry('🇨🇳','+86')">🇨🇳 China +86</div>
-                            <div onclick="selectCountry('🇩🇪','+49')">🇩🇪 Germany +49</div>
-                            <div onclick="selectCountry('🇫🇷','+33')">🇫🇷 France +33</div>
-                            <div onclick="selectCountry('🇮🇹','+39')">🇮🇹 Italy +39</div>
-                            <div onclick="selectCountry('🇪🇸','+34')">🇪🇸 Spain +34</div>
-                            <div onclick="selectCountry('🇷🇺','+7')">🇷🇺 Russia +7</div>
-                            <div onclick="selectCountry('🇧🇷','+55')">🇧🇷 Brazil +55</div>
-                            <div onclick="selectCountry('🇲🇽','+52')">🇲🇽 Mexico +52</div>
-                            <div onclick="selectCountry('🇿🇦','+27')">🇿🇦 South Africa +27</div>
-                            <div onclick="selectCountry('🇸🇬','+65')">🇸🇬 Singapore +65</div>
-                            <div onclick="selectCountry('🇲🇾','+60')">🇲🇾 Malaysia +60</div>
-                            <div onclick="selectCountry('🇵🇭','+63')">🇵🇭 Philippines +63</div>
-                            <div onclick="selectCountry('🇰🇷','+82')">🇰🇷 South Korea +82</div>
-                            <div onclick="selectCountry('🇹🇭','+66')">🇹🇭 Thailand +66</div>
-                            <div onclick="selectCountry('🇻🇳','+84')">🇻🇳 Vietnam +84</div>
-                            <div onclick="selectCountry('🇵🇰','+92')">🇵🇰 Pakistan +92</div>
-                            <div onclick="selectCountry('🇧🇩','+880')">🇧🇩 Bangladesh +880</div>
-                            <div onclick="selectCountry('🇳🇵','+977')">🇳🇵 Nepal +977</div>
-                            <div onclick="selectCountry('🇱🇰','+94')">🇱🇰 Sri Lanka +94</div>
-                        </div>
-                    </div>
-                </div>
+  <div class="country-dropdown" id="countryDropdown">
+    <input type="text" id="countrySearch" placeholder="Search country..." onkeyup="filterCountries()">
+
+    <div class="country-list">
+      <div onclick="selectCountry('https://flagcdn.com/w40/in.png','+91')"><img src="https://flagcdn.com/w40/in.png"> India +91</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/us.png','+1')"><img src="https://flagcdn.com/w40/us.png"> United States +1</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/gb.png','+44')"><img src="https://flagcdn.com/w40/gb.png"> United Kingdom +44</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/ae.png','+971')"><img src="https://flagcdn.com/w40/ae.png"> UAE +971</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/au.png','+61')"><img src="https://flagcdn.com/w40/au.png"> Australia +61</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/ca.png','+1')"><img src="https://flagcdn.com/w40/ca.png"> Canada +1</div>
+      <div onclick="selectCountry('https://flagcdn.com/w40/jp.png','+81')"><img src="https://flagcdn.com/w40/jp.png"> Japan +81</div>
+    </div>
+  </div>
+</div>
 
                 <div class="bio-new-wrap">
                     <textarea class="bio-box" maxlength="300">slothUI is the one and only design system for intelligent, lazy gen Z people. It’s the most perfect design tool for procrastinators.</textarea>
@@ -527,7 +619,9 @@ body{
             <div class="profile-right-avatar">
                 <p>Change Avatar</p>
                 <div class="avatar"></div>
-                <button class="edit-avatar-btn" onclick="openFileUpload()">✎</button>
+                <button class="edit-avatar-btn" onclick="openFileUpload()">
+                     <img src="pencil.png" alt="edit" class="edit-icon">
+                </button>
             </div>
 
             <button class="save-btn">Save Changes</button>
