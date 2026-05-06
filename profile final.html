@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vincera Profile</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Manrope", sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#0f071c;
+    color:white;
+    overflow-x:hidden;
+}
+
+@keyframes fadeUp{
+    from{ opacity:0; transform:translateY(25px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:26px 42px 8px;
+}
+
+.tabs{
+    display:flex;
+    gap:22px;
+    border-bottom:1px solid rgba(255,255,255,.45);
+    width:330px;
+    padding-bottom:8px;
+}
+
+.tab{
+    font-size:17px;
+    font-weight:800;
+    padding:9px 28px;
+    border-radius:9px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.tab.active{
+    background:#eef4ff;
+    color:#111;
+}
+
+.logout{
+    color:white;
+    text-decoration:none;
+    font-size:16px;
+    opacity:.9;
+    transition:.3s;
+}
+
+.logout:hover{
+    opacity:1;
+    transform:translateX(-4px);
+}
+
+.main-card{
+    width:94%;
+    min-height:620px;
+    margin:26px auto;
+    background:#1d1430;
+    border-radius:14px;
+    padding:35px;
+    animation:fadeUp .7s ease;
+}
+
+/* NEW PROFILE DESIGN */
+.profile-new-design{
+    min-height:570px;
+    min-width: 570px;
+    border:1.3px solid rgba(255,255,255,.75);
+    border-radius:18px;
+    padding:45px 60px;
+    display:grid;
+    grid-template-columns:190px 360px 1fr;
+    gap:55px;
+    position:relative;
+    background:#10081d;
+    animation:fadeUp .8s ease;
+}
+
+.profile-left-text{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:10px 0 140px;
+}
+
+.profile-left-text h4{
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.profile-left-text p{
+    font-size:11px;
+    line-height:1.6;
+    color:#ddd7ef;
+}
+
+.profile-middle{
+    padding-top:10px;
+}
+
+.profile-middle label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:8px;
+    margin-top:18px;
+    color:white;
+}
+
+.profile-middle label:first-child{
+    margin-top:0;
+}
+
+.dark-input{
+    width:330px;
+    height:38px;
+    background:#2d223d;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 14px;
+    transition:.3s;
+}
+
+.dark-input:hover,
+.dark-input:focus-within{
+    box-shadow:0 0 14px rgba(255,255,255,.12);
+    transform:translateY(-1px);
+}
+
+.dark-input input{
+    width:100%;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:12px;
+}
+
+/* PHONE BOX - FIXED */
+.phone-box {
+  position: relative;
+  width: 330px;
+  height: 38px;
+  margin-bottom:52px;
+}
+
+.phone-box input {
+  width: 100%;
+  height: 38px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  background: #2d223d;
+  color: white;
+  padding-left: 72px;
+  font-size: 12px;
+  transition:.3s;
+}
+
+.phone-box input:hover,
+.phone-box input:focus {
+  box-shadow:0 0 14px rgba(255,255,255,.12);
+}
+
+.flag-section {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 5;
+  border-right: 1px solid rgba(255,255,255,0.25);
+}
+
+.flag-section img {
+  width: 20px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.arrow {
+  color: #cfc9dc;
+  font-size: 10px;
+}
+
+/* COUNTRY DROPDOWN - FIXED: display:none only, overflow:hidden to kill double scrollbar */
+.country-dropdown {
+  display: none;
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 250px;
+  background: #17102d;
+  border-radius: 16px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+  overflow: hidden; /* prevents outer container from growing its own scrollbar */
+}
+
+/* Search input inside dropdown */
+.country-dropdown input {
+  width: 100%;
+  height: 36px;
+  padding-left: 12px;
+  border-radius: 10px;
+  background: #2b2146;
+  margin-bottom: 6px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 12px;
+}
+
+/* Country list - only this scrolls */
+.country-list {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.country-list div {
+  padding: 9px;
+  cursor: pointer;
+  border-radius: 9px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ddd;
+}
+
+.country-list div:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.country-list img {
+  width: 22px;
+  height: 16px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.bio-new-wrap{
+    position:relative;
+    width:650px;
+    margin-top:0;
+}
+
+.bio-box{
+    width:650px;
+    height:105px;
+    background:#2d223d;
+    border:none;
+    outline:none;
+    resize:none;
+    border-radius:18px;
+    color:white;
+    font-size:12px;
+    padding:16px;
+    line-height:1.5;
+}
+
+.count{
+    position:absolute;
+    bottom:10px;
+    left:16px;
+    font-size:10px;
+    color:#d8d3e8;
+}
+
+.profile-right-avatar{
+    text-align:center;
+    padding-top:8px;
+    position:relative;
+}
+
+.profile-right-avatar p{
+    font-size:11px;
+    margin-bottom:25px;
+}
+
+.avatar-wrapper{
+    position:relative;
+    width:115px;
+    margin:auto;
+}
+
+.avatar{
+    width:115px;
+    height:115px;
+    border-radius:50%;
+    background:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200') center/cover;
+}
+
+.edit-avatar-btn{
+    position:absolute;
+    bottom:4px;
+    right:4px;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    border:none;
+    background:white;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.35);
+    transition:.3s;
+}
+.edit-avatar-btn svg{
+     position:relative;
+    width: 22px;   
+    height: 20px;
+    object-fit: contain;
+    top: 9%;
+    left: -2px;
+}
+.edit-avatar-btn:hover{
+    transform:scale(1.12);
+    box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+
+.save-btn{
+    position:absolute;
+    right:35px;
+    bottom:28px;
+    border:none;
+    background:white;
+    color:#111;
+    padding:12px 25px;
+    border-radius:22px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.save-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 14px rgba(255,255,255,.25);
+}
+
+/* PREFERENCES */
+.hidden{
+    display:none;
+}
+
+.preferences-page{
+    animation:fadeUp .7s ease;
+}
+
+.pref-card{
+    background:#1b132d;
+    border:1.3px solid rgba(255,255,255,.75);
+    border-radius:18px;
+    padding:17px 22px;
+    margin-bottom:16px;
+    transition:.35s;
+}
+
+.pref-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 0 15px rgba(255,255,255,.13);
+}
+
+.pref-card h3{
+    margin-bottom:13px;
+    font-size:14px;
+}
+
+.pref-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+}
+
+.title{
+    font-size:14px;
+    font-weight:700;
+}
+
+.desc{
+    font-size:10px;
+    color:#d8d3e8;
+}
+
+.switch{
+    position:relative;
+    width:40px;
+    height:21px;
+    flex-shrink:0;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#2b234d;
+    border-radius:20px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:15px;
+    height:15px;
+    left:3px;
+    bottom:3px;
+    background:white;
+    border-radius:50%;
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:white;
+}
+
+.switch input:checked + .slider:before{
+    background:#2b234d;
+    transform:translateX(19px);
+}
+
+@media(max-width:950px){
+    .profile-new-design{
+        grid-template-columns:1fr;
+        padding:30px;
+        gap:25px;
+    }
+
+    .profile-left-text{
+        padding:0;
+        gap:25px;
+    }
+
+    .dark-input,
+    .phone-box,
+    .bio-new-wrap,
+    .bio-box{
+        width:100%;
+    }
+
+    .edit-avatar-btn{
+        position:static;
+        margin-top:-25px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('profile', event)">Profile</div>
+        <div class="tab" onclick="openTab('preferences', event)">Preferences</div>
+    </div>
+    <a href="login.html" class="logout">Back</a>
+</div>
+
+<div class="main-card">
+
+    <!-- PROFILE -->
+    <div id="profile" class="tab-page">
+        <div class="profile-new-design">
+
+            <div class="profile-left-text">
+                <div>
+                    <h4>Personal Info</h4>
+                    <p>You can change your personal information settings here.</p>
+                </div>
+                <div>
+                    <h4>Bio Description</h4>
+                    <p>This will be your main story. Keep it very, very long.</p>
+                </div>
+            </div>
+
+            <div class="profile-middle">
+
+                <label>Full Name</label>
+                <div class="dark-input">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 12C14.2 12 16 10.2 16 8C16 5.8 14.2 4 12 4C9.8 4 8 5.8 8 8C8 10.2 9.8 12 12 12Z" stroke="white" stroke-width="1.5"/>
+                        <path d="M4 21C4.8 16.8 7.8 15 12 15C16.2 15 19.2 16.8 20 21" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <input id="nameInput" type="text" value="Azusa Nakano">
+                </div>
+
+                <label>Email Address</label>
+                <div class="dark-input">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="5" width="18" height="14" rx="3" stroke="white" stroke-width="1.5"/>
+                        <path d="M4 7L12 13L20 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <input id="emailInput" type="email" value="elementary221b@gmail.com">
+                </div>
+
+                <label>Phone Number</label>
+
+                <div class="phone-box">
+                    <div class="flag-section" onclick="toggleCountryDropdown()">
+                        <img id="selectedFlag" src="https://flagcdn.com/w40/in.png" alt="India">
+                        <span class="arrow">⌄</span>
+                    </div>
+
+                    <input id="phoneInput" type="text" value="+91 1234567899">
+
+                    <!-- FIXED: removed display:flex from CSS, kept only display:none -->
+                    <div class="country-dropdown" id="countryDropdown">
+                        <input type="text" id="countrySearch" placeholder="Search country..." onkeyup="filterCountries()">
+                        <div class="country-list" id="countryList"></div>
+                    </div>
+                </div>
+
+                <div class="bio-new-wrap">
+                    <textarea class="bio-box" maxlength="300">slothUI is the one and only design system for intelligent, lazy gen Z people. It's the most perfect design tool for procrastinators.</textarea>
+                    <div class="count">0/300</div>
+                </div>
+
+            </div>
+
+            <div class="profile-right-avatar">
+                <p>Change Avatar</p>
+                <div class="avatar-wrapper">
+                    <div class="avatar"></div>
+                    <button class="edit-avatar-btn" onclick="openFileUpload()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="save-btn">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- PREFERENCES -->
+    <div id="preferences" class="tab-page hidden preferences-page">
+
+        <div class="pref-card">
+            <h3>AI Features</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI notes</p>
+                    <span class="desc">Keep Or Take Notes Using AI</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI Attention Tracking</p>
+                    <span class="desc">Tracks The Users Attention Inside The Meeting Using AI</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI Summary</p>
+                    <span class="desc">Summarizes The Meeting</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <div class="pref-card">
+            <h3>Attention & Focus</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Focus Alerts</p>
+                    <span class="desc">Alerts When A Users Attention Drop</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Show Attention %</p>
+                    <span class="desc">Enables Users Attention %</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Highlight Low Attention Users (Host)</p>
+                    <span class="desc">Highlights The Area Around The User According To Their Attention Score</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <div class="pref-card">
+            <h3>Meeting Experience</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Live Translation</p>
+                    <span class="desc">Translates Live Audio</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Speaking Tracker</p>
+                    <span class="desc">Enables Users Attention %</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Sound Alerts</p>
+                    <span class="desc">Pings The User And The Host When The Attention Drops</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function openTab(tab, event){
+    document.querySelectorAll(".tab-page").forEach(page => page.classList.add("hidden"));
+    document.getElementById(tab).classList.remove("hidden");
+    document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+function toggleCountryDropdown(){
+    const dropdown = document.getElementById("countryDropdown");
+    // toggle using display block/none only — never flex
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function selectCountry(flag, code){
+    document.getElementById("selectedFlag").src = flag;
+    const phoneInput = document.getElementById("phoneInput");
+    const onlyNumber = phoneInput.value.replace(/^\+\d+\s*/, "");
+    phoneInput.value = code + " " + onlyNumber;
+    document.getElementById("countryDropdown").style.display = "none";
+}
+
+const countries = [
+    { flag: 'in', code: '+91',  name: 'India' },
+    { flag: 'us', code: '+1',   name: 'United States' },
+    { flag: 'gb', code: '+44',  name: 'United Kingdom' },
+    { flag: 'ae', code: '+971', name: 'UAE' },
+    { flag: 'au', code: '+61',  name: 'Australia' },
+    { flag: 'ca', code: '+1',   name: 'Canada' },
+    { flag: 'jp', code: '+81',  name: 'Japan' },
+    { flag: 'de', code: '+49',  name: 'Germany' },
+    { flag: 'fr', code: '+33',  name: 'France' },
+    { flag: 'sg', code: '+65',  name: 'Singapore' },
+    { flag: 'br', code: '+55',  name: 'Brazil' },
+    { flag: 'mx', code: '+52',  name: 'Mexico' },
+    { flag: 'za', code: '+27',  name: 'South Africa' },
+    { flag: 'ng', code: '+234', name: 'Nigeria' },
+    { flag: 'pk', code: '+92',  name: 'Pakistan' },
+    { flag: 'bd', code: '+880', name: 'Bangladesh' },
+    { flag: 'lk', code: '+94',  name: 'Sri Lanka' },
+    { flag: 'nz', code: '+64',  name: 'New Zealand' },
+];
+
+function buildCountryList(filter = '') {
+    const list = document.getElementById('countryList');
+    list.innerHTML = '';
+    countries
+        .filter(c => (c.name + ' ' + c.code).toLowerCase().includes(filter.toLowerCase()))
+        .forEach(c => {
+            const div = document.createElement('div');
+            div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:12px;color:#ddd;';
+            div.onmouseover = () => div.style.background = 'rgba(255,255,255,0.1)';
+            div.onmouseout  = () => div.style.background = 'transparent';
+
+            const img = document.createElement('img');
+            img.src = `https://flagcdn.com/w40/${c.flag}.png`;
+            img.style.cssText = 'width:24px;height:17px;border-radius:3px;object-fit:cover;flex-shrink:0;';
+
+            const txt = document.createTextNode(`${c.name} ${c.code}`);
+
+            div.appendChild(img);
+            div.appendChild(txt);
+            div.onclick = () => selectCountry(`https://flagcdn.com/w40/${c.flag}.png`, c.code);
+            list.appendChild(div);
+        });
+}
+
+function filterCountries(){
+    buildCountryList(document.getElementById("countrySearch").value);
+}
+
+// Build on load
+window.addEventListener("DOMContentLoaded", () => buildCountryList());
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function(e){
+    const phoneBox = document.querySelector(".phone-box");
+    if(phoneBox && !phoneBox.contains(e.target)){
+        document.getElementById("countryDropdown").style.display = "none";
+    }
+});
+
+// Bio character count
+const bioBox = document.querySelector(".bio-box");
+const count = document.querySelector(".count");
+function updateCount(){ count.textContent = bioBox.value.length + "/300"; }
+bioBox.addEventListener("input", updateCount);
+updateCount();
+
+// Save
+document.querySelector(".save-btn").addEventListener("click", function(){
+    const name = document.getElementById("nameInput").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
+    const phone = document.getElementById("phoneInput").value.trim();
+
+    if(!name){ alert("Please enter name"); return; }
+    if(!email || !email.includes("@") || !email.includes(".")){ alert("Please enter valid email"); return; }
+    if(!phone){ alert("Please enter phone number"); return; }
+
+    localStorage.setItem("profileName", name);
+    localStorage.setItem("profileEmail", email);
+    localStorage.setItem("profilePhone", phone);
+    localStorage.setItem("profileBio", bioBox.value);
+    localStorage.setItem("profileFlag", document.getElementById("selectedFlag").src);
+    alert("Profile saved successfully ✅");
+});
+
+// Toggle preferences
+document.querySelectorAll(".switch input").forEach((toggle, index) => {
+    const saved = localStorage.getItem("pref_" + index);
+    if(saved !== null) toggle.checked = saved === "true";
+    toggle.addEventListener("change", function(){ localStorage.setItem("pref_" + index, this.checked); });
+});
+
+// Load saved data
+window.addEventListener("load", function(){
+    if(localStorage.getItem("profileName")) document.getElementById("nameInput").value = localStorage.getItem("profileName");
+    if(localStorage.getItem("profileEmail")) document.getElementById("emailInput").value = localStorage.getItem("profileEmail");
+    if(localStorage.getItem("profilePhone")) document.getElementById("phoneInput").value = localStorage.getItem("profilePhone");
+    if(localStorage.getItem("profileBio")){ bioBox.value = localStorage.getItem("profileBio"); updateCount(); }
+    if(localStorage.getItem("profileFlag")) document.getElementById("selectedFlag").src = localStorage.getItem("profileFlag");
+    if(localStorage.getItem("profileAvatar")) document.querySelector(".avatar").style.backgroundImage = `url('${localStorage.getItem("profileAvatar")}')`;
+});
+
+function openFileUpload(){
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/png,image/jpg,image/jpeg,image/svg+xml";
+    input.onchange = function(){
+        const file = input.files[0];
+        if(file) updateAvatar(file);
+    };
+    input.click();
+}
+
+function updateAvatar(file){
+    if(!file.type.startsWith("image/")){ alert("Please upload image only"); return; }
+    if(file.size > 10 * 1024 * 1024){ alert("Image must be below 10MB"); return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+        document.querySelector(".avatar").style.backgroundImage = `url('${e.target.result}')`;
+        localStorage.setItem("profileAvatar", e.target.result);
+        alert("Avatar updated successfully ✅");
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
