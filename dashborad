@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Control Panel</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Manrope',sans-serif;
+}
+
+body{
+  background:#dbe2ea;
+  min-height:100vh;
+  display:flex;
+  color:#2f254a;
+  overflow:hidden;
+}
+
+.sidebar{
+  width:190px;
+  min-height:100vh;
+  background:#271947;
+  color:#fff;
+  padding:18px 0;
+  flex-shrink:0;
+  transition:0.3s ease;
+}
+
+.sidebar.collapsed{ width:70px; }
+
+.sidebar.collapsed .brand-title,
+.sidebar.collapsed .brand-sub,
+.sidebar.collapsed .menu-item span{ display:none; }
+
+.sidebar.collapsed .menu-item{ justify-content:center; }
+.sidebar.collapsed .sidebar-head{ justify-content:center; }
+.sidebar.collapsed .collapse-icon{ margin-left:0; }
+.sidebar.collapsed .collapse-icon i{ transform:rotate(180deg); }
+
+.sidebar-top{ padding:18px 22px 22px; }
+
+.sidebar-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.brand-title{
+  font-size:17px;
+  font-weight:500;
+  line-height:1.2;
+}
+
+.brand-sub{
+  font-size:10px;
+  color:#b8b2c8;
+  margin-top:2px;
+}
+
+.collapse-icon{
+  font-size:11px;
+  margin-top:4px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.collapse-icon i{ transition:0.3s ease; }
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:0 8px;
+  margin-top:8px;
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 10px;
+  border-radius:999px;
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.menu-item i{
+  width:12px;
+  font-size:10px;
+  text-align:center;
+}
+
+.menu-item:hover{ background:rgba(255,255,255,0.08); }
+
+.menu-item.active{
+  background:#f3f3f4;
+  color:#271947;
+}
+
+.main{
+  flex:1;
+  padding:28px 34px;
+  overflow-y:auto;
+}
+
+.main::-webkit-scrollbar,
+.user-scroll::-webkit-scrollbar,
+.engagement-list::-webkit-scrollbar,
+.report-scroll::-webkit-scrollbar{
+  width:6px;
+}
+
+.main::-webkit-scrollbar-thumb,
+.user-scroll::-webkit-scrollbar-thumb,
+.engagement-list::-webkit-scrollbar-thumb,
+.report-scroll::-webkit-scrollbar-thumb{
+  background:#9a9a9a;
+  border-radius:10px;
+}
+
+.page{ display:none; }
+
+.page.active{
+  display:block;
+  animation:fadeUp .45s ease;
+}
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(18px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.dashboard-title,
+.page-title,
+.section-title{
+  color:#372d56;
+  font-weight:700;
+}
+
+.dashboard-title{
+  font-size:22px;
+  margin-bottom:22px;
+}
+
+.page-title{
+  font-size:26px;
+  margin-bottom:6px;
+}
+
+.page-subtitle{
+  font-size:12px;
+  color:#80838d;
+  margin-bottom:26px;
+}
+
+.section-title{
+  font-size:18px;
+  margin-bottom:0;
+}
+
+.card{
+  background:#f5f5f5;
+  border-radius:18px;
+  padding:28px 26px;
+  margin-bottom:16px;
+  border:1px solid #ececec;
+}
+
+.attention-text{
+  font-size:18px;
+  font-weight:700;
+  color:#111;
+}
+
+.engagement-title{
+  font-size:15px;
+  font-weight:700;
+  color:#1f1f1f;
+  margin-bottom:16px;
+}
+
+.engagement-list{
+  max-height:145px;
+  overflow-y:auto;
+  padding-right:6px;
+}
+
+.engagement-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:6px 4px;
+  font-size:13px;
+  color:#666;
+  border-radius:10px;
+}
+
+.green{ color:#31d843; }
+.red{ color:#ff3b30; }
+.yellow{ color:#d6c12d; }
+
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.top-action-buttons{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.top-btn{
+  height:30px;
+  padding:0 14px;
+  border:1.2px solid #7e7e88;
+  border-radius:999px;
+  background:transparent;
+  color:#2f254a;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s ease;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.top-btn:hover,
+.action-btn:hover,
+.save-btn:hover{
+  background:#31244f;
+  color:#fff;
+  border-color:#31244f;
+}
+
+/* USER MANAGEMENT */
+.user-box{
+  background:#f5f5f5;
+  border-radius:24px;
+  padding:18px;
+  border:1px solid #e5e5e5;
+}
+
+.inner-user-panel{
+  border:1.3px solid #9d9da8;
+  border-radius:20px;
+  padding:12px 14px 16px;
+}
+
+.top-tools{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+
+.select-all-label{
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#372d56;
+}
+
+.search-box{
+  position:relative;
+  display:inline-block;
+}
+
+.search-box i{
+  position:absolute;
+  left:10px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:10px;
+  color:#7a7a85;
+}
+
+.search-box input{
+  width:130px;
+  height:24px;
+  border:1.2px solid #8a8a94;
+  border-radius:999px;
+  padding-left:28px;
+  padding-right:10px;
+  font-size:10px;
+  background:transparent;
+  outline:none;
+  color:#372d56;
+}
+
+.divider{
+  height:1px;
+  width:100%;
+  background:#c1c1c7;
+  margin-bottom:12px;
+}
+
+.user-scroll{
+  max-height:290px;
+  overflow-y:auto;
+  padding-right:4px;
+}
+
+.user-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  padding:8px 4px;
+  border-radius:12px;
+  flex-wrap:wrap;
+}
+
+.user-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user-info{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.user-name{
+  font-size:16px;
+  font-weight:500;
+  color:#2f254a;
+}
+
+.user-email{
+  font-size:11px;
+  color:#7f8390;
+}
+
+.action-group{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.action-btn{
+  min-width:58px;
+  height:24px;
+  border:1.2px solid #7e7e88;
+  border-radius:999px;
+  background:transparent;
+  color:#2f254a;
+  font-size:12px;
+  cursor:pointer;
+  transition:0.25s ease;
+  padding:0 12px;
+}
+
+/* REPORT PAGE */
+.report-box{
+  background:#f5f5f5;
+  border-radius:24px;
+  padding:18px;
+  border:1px solid #e5e5e5;
+  max-width:900px;
+}
+
+.report-inner{
+  border:1.3px solid #9d9da8;
+  border-radius:20px;
+  padding:12px 16px 18px;
+}
+
+.report-filter-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+
+.report-selects{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.report-select,
+.report-filter-btn{
+  height:24px;
+  min-width:120px;
+  border:1.2px solid #7e7e88;
+  border-radius:999px;
+  background:transparent;
+  color:#372d56;
+  font-size:10px;
+  outline:none;
+  padding:0 14px;
+  cursor:pointer;
+}
+
+.report-filter-btn{
+  min-width:95px;
+  font-weight:700;
+  transition:.25s ease;
+}
+
+.report-filter-btn:hover{
+  background:#31244f;
+  color:#fff;
+}
+
+.report-line{
+  height:1px;
+  width:100%;
+  background:#c1c1c7;
+  margin-bottom:12px;
+}
+
+.report-scroll{
+  max-height:260px;
+  overflow-y:auto;
+  padding-right:8px;
+}
+
+.report-table{
+  width:100%;
+  border-collapse:collapse;
+  color:#372d56;
+}
+
+.report-table thead tr{
+  border:1.2px solid #8f8f9a;
+}
+
+.report-table th{
+  font-size:13px;
+  font-weight:700;
+  padding:10px 12px;
+  text-align:left;
+}
+
+.report-table td{
+  font-size:12px;
+  padding:9px 12px;
+  color:#2f254a;
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:75px;
+  height:20px;
+  border-radius:999px;
+  border:1px solid #7e7e88;
+  font-size:10px;
+}
+
+.delete-btn{
+  min-width:65px;
+  height:22px;
+  border-radius:999px;
+  border:1px solid #7e7e88;
+  background:transparent;
+  color:#2f254a;
+  font-size:10px;
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.delete-btn:hover{
+  background:#d93025;
+  color:#fff;
+  border-color:#d93025;
+}
+
+
+
+/* REPORT LIGHT DESIGN WITH SLIDE FILTERS */
+.filter-pill{
+  height:24px;
+  min-width:117px;
+  border:1.2px solid #7e7e88;
+  background:transparent;
+  color:#372d56;
+  border-radius:999px;
+  font-size:10px;
+  outline:none;
+  cursor:pointer;
+  padding:0 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  transition:.25s ease;
+}
+.filter-pill:hover,
+.filter-pill.active{
+  background:#31244f;
+  color:#fff;
+  border-color:#31244f;
+}
+.filter-pill i{font-size:9px;transition:.25s ease;}
+.filter-pill.active i{transform:rotate(180deg);}
+.view-btn{
+  min-width:56px;
+  height:20px;
+  border-radius:999px;
+  border:1.2px solid #7e7e88;
+  background:transparent;
+  color:#2f254a;
+  font-size:9px;
+  cursor:pointer;
+  transition:.25s ease;
+}
+.view-btn:hover{
+  background:#31244f;
+  color:#fff;
+  border-color:#31244f;
+  transform:scale(1.05);
+}
+.slide-panel{
+  position:fixed;
+  width:268px;
+  min-height:250px;
+  background:#f5f5f5;
+  color:#372d56;
+  border:1.2px solid #cbc8cf;
+  border-radius:22px;
+  padding:14px 16px;
+  z-index:1000;
+  transform:translateY(10px) scale(.97);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s cubic-bezier(.2,.9,.2,1);
+  box-shadow:0 18px 45px rgba(49,36,79,.20);
+}
+.slide-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
+.slide-panel.host-panel{min-height:225px;width:240px;}
+.slide-title{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:15px;color:#372d56;}
+.slide-title .back{cursor:pointer;font-size:18px;font-weight:600;color:#372d56;}
+.slide-title .next{cursor:pointer;font-size:18px;color:#372d56;}
+.choice-pill{
+  height:30px;
+  border:1.2px solid #7e7e88;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  margin:8px 0;
+  font-size:10px;
+  cursor:pointer;
+  transition:.25s ease;
+  color:#372d56;
+  background:#fff;
+}
+.choice-pill:hover{background:#eeeaf7;transform:translateX(3px);}
+.choice-pill .radio{
+  position:absolute;
+  right:16px;
+  width:14px;
+  height:14px;
+  border:1.2px solid #7e7e88;
+  border-radius:50%;
+  background:#fff;
+}
+.choice-pill.selected{background:#31244f;color:#fff;border-color:#31244f;}
+.choice-pill.selected .radio{border-color:#fff;background:#fff;}
+.choice-pill.selected .radio::after{
+  content:'\f00c';
+  font-family:'Font Awesome 6 Free';
+  font-weight:900;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#b8b2c8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:8px;
+  color:#fff;
+  margin:-1px 0 0 -1px;
+}
+.choice-label{font-size:13px;margin:12px 0 6px;color:#372d56;}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:13px 16px;text-align:center;font-size:11px;color:#372d56;}
+.calendar-grid .day-name{font-size:10px;font-weight:700;margin-bottom:5px;color:#372d56;}
+.calendar-grid .date-cell{height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:.2s ease;}
+.calendar-grid .date-cell:hover,.calendar-grid .date-cell.selected{background:#31244f;color:#fff;}
+.calendar-grid .today{border:1.2px solid #31244f;}
+.calendar-grid .empty-cell{height:20px;}
+.report-list-view.hidden,
+.report-details-view.hidden{display:none;}
+.report-details-view{animation:fadeUp .35s ease;}
+.details-back{
+  border:0;
+  background:transparent;
+  color:#372d56;
+  font-size:18px;
+  cursor:pointer;
+  margin-right:12px;
+}
+.details-title-row{
+  display:flex;
+  align-items:center;
+  margin-bottom:14px;
+}
+.details-title-row h1{
+  color:#372d56;
+  font-size:24px;
+  font-weight:700;
+}
+.details-info{
+  margin-left:38px;
+  margin-bottom:22px;
+  color:#372d56;
+  font-size:15px;
+  line-height:1.55;
+}
+.analytics-heading{
+  color:#372d56;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:16px;
+}
+.analytics-box{
+  background:#f5f5f5;
+  border:1.3px solid #9d9da8;
+  border-radius:22px;
+  padding:22px 28px;
+  max-width:735px;
+  height:350px;
+  overflow-y:auto;
+}
+.analytics-box::-webkit-scrollbar{width:6px;}
+.analytics-box::-webkit-scrollbar-thumb{background:#9a9a9a;border-radius:10px;}
+.participant-card{
+  width:590px;
+  max-width:100%;
+  min-height:86px;
+  border:1.3px solid #9d9da8;
+  border-radius:22px;
+  padding:14px 22px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin:10px 0 22px;
+  color:#372d56;
+  background:#fff;
+}
+.avatar-circle{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:#f4f4f7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#31244f;
+  font-size:30px;
+  flex-shrink:0;
+}
+.participant-info{flex:1;font-size:13px;line-height:1.35;}
+.participant-info strong{font-size:14px;display:block;margin-bottom:2px;}
+.participant-stats{font-size:13px;line-height:1.45;min-width:95px;}
+.video-status{
+  min-width:76px;
+  height:22px;
+  border-radius:999px;
+  border:0;
+  color:#fff;
+  font-size:9px;
+  padding:0 12px;
+}
+.video-on{background:#24cf64;}
+.partial{background:#1e9e51;}
+.video-off{background:#df2c33;}
+@media(max-width:900px){
+  .report-filter-row,.report-selects{flex-wrap:wrap;}
+  .slide-panel{width:82%;}
+  .analytics-box{height:auto;max-height:360px;}
+}
+
+/* PERMISSIONS + SETTINGS */
+.permission-tabs{
+  display:flex;
+  align-items:center;
+  background:#f5f5f5;
+  border:1.2px solid #c8c6cb;
+  border-radius:999px;
+  width:332px;
+  max-width:100%;
+  height:38px;
+  padding:3px;
+  margin-bottom:38px;
+}
+
+.permission-tab{
+  flex:1;
+  height:30px;
+  border:none;
+  background:transparent;
+  border-radius:999px;
+  font-size:12px;
+  color:#3c3551;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.permission-tab.active{
+  background:#31244f;
+  color:#fff;
+}
+
+.permission-content{ display:none; }
+.permission-content.active{ display:block; }
+
+.permission-grid,
+.settings-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(260px, 1fr));
+  gap:26px 34px;
+  max-width:700px;
+  margin:0 auto;
+}
+
+.permission-card,
+.setting-card{
+  background:#f7f7f7;
+  border:1.2px solid #cbc8cf;
+  border-radius:26px;
+  min-height:113px;
+  padding:18px 18px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.permission-card h3,
+.setting-card h3{
+  font-size:15px;
+  font-weight:700;
+  color:#372d56;
+  margin-bottom:8px;
+}
+
+.permission-card p,
+.setting-card p{
+  font-size:11px;
+  color:#343434;
+  line-height:1.4;
+}
+
+.switch{
+  position:relative;
+  width:40px;
+  height:18px;
+  margin-top:14px;
+  display:inline-block;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#c9ccd6;
+  border-radius:999px;
+  transition:0.35s ease;
+  cursor:pointer;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  height:14px;
+  width:14px;
+  left:2px;
+  top:2px;
+  background:#fff;
+  border-radius:50%;
+  transition:0.35s ease;
+}
+
+.switch input:checked + .slider{
+  background:#31244f;
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(22px);
+}
+
+/* Save Changes button fixed bottom-right */
+.save-wrap{
+  position:fixed;
+  bottom:32px;
+  right:38px;
+  z-index:100;
+}
+
+.save-btn{
+  min-width:134px;
+  height:38px;
+  border:1px solid transparent;
+  border-radius:999px;
+  background:#31244f;
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.save-btn.saved{
+  background:#28a745;
+  border-color:#28a745;
+}
+
+
+
+/* NEW SETTINGS PAGE DESIGN */
+.settings-vincera-page{
+  background:#11081f;
+  color:#fff;
+  min-height:calc(100vh - 56px);
+  border-radius:0;
+  padding:26px 32px 34px;
+  max-width:980px;
+  margin:0 auto;
+  box-shadow:0 18px 45px rgba(15,8,31,.18);
+}
+.settings-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:4px;
+}
+.settings-logo{
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.settings-logout{
+  color:#fff;
+  text-decoration:none;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  opacity:.95;
+  cursor:pointer;
+}
+.settings-heading{
+  margin-left:50px;
+  font-size:15px;
+  font-weight:800;
+  margin-bottom:26px;
+}
+.settings-list{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+.v-setting-card{
+  border:1.2px solid rgba(255,255,255,.75);
+  background:#2b263d;
+  border-radius:14px;
+  padding:14px 20px 18px;
+  min-height:76px;
+  animation:settingFade .45s ease both;
+}
+@keyframes settingFade{
+  from{opacity:0; transform:translateY(12px)}
+  to{opacity:1; transform:translateY(0)}
+}
+.v-setting-card h3{
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:8px;
+  color:#fff;
+}
+.v-setting-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:20px;
+  min-height:24px;
+  margin:3px 0;
+}
+.v-setting-row span,
+.v-setting-row label{
+  font-size:11px;
+  color:#f0edf6;
+}
+.v-switch{
+  position:relative;
+  width:30px;
+  height:15px;
+  display:inline-block;
+}
+.v-switch input{display:none;}
+.v-switch span{
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:#05020a;
+  cursor:pointer;
+  transition:.25s ease;
+}
+.v-switch span:before{
+  content:"";
+  position:absolute;
+  width:8px;
+  height:8px;
+  left:4px;
+  top:3.5px;
+  background:#ddd;
+  border-radius:50%;
+  transition:.25s ease;
+}
+.v-switch input:checked + span{background:#35d978;}
+.v-switch input:checked + span:before{transform:translateX(14px); background:#fff;}
+.settings-select-btn{
+  min-width:112px;
+  height:24px;
+  border:0;
+  border-radius:999px;
+  background:#130b26;
+  color:#fff;
+  font-size:9px;
+  padding:0 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+}
+.settings-select-btn i{font-size:8px;}
+.delete-small-btn{
+  width:92px;
+  height:28px;
+  border:0;
+  border-radius:4px;
+  background:#130b26;
+  color:#fff;
+  font-size:10px;
+  cursor:pointer;
+  transition:.25s ease;
+}
+.delete-small-btn:hover{background:#ff1515;}
+.settings-inline-panel{
+  display:none;
+  margin:18px auto 4px;
+  background:#11081f;
+  border-radius:0 0 18px 18px;
+  border-top:3px solid #8d22ff;
+  padding:28px 32px 24px;
+  max-width:420px;
+  animation:panelDown .3s ease;
+}
+.settings-inline-panel.active{display:block;}
+@keyframes panelDown{
+  from{opacity:0; transform:translateY(-10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+.settings-inline-panel h2{
+  font-size:18px;
+  margin-bottom:6px;
+}
+.settings-inline-panel p{
+  font-size:15px;
+  color:#aaa2b7;
+  margin-bottom:22px;
+}
+.radio-choice{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  padding:8px 0;
+  font-size:17px;
+  color:#fff;
+  cursor:pointer;
+}
+.radio-choice input{accent-color:#fff;}
+.panel-save-btn{
+  display:block;
+  margin:12px 0 0 auto;
+  width:170px;
+  height:54px;
+  border-radius:999px;
+  border:1.3px solid #fff;
+  background:transparent;
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+.panel-save-btn:hover{background:#fff; color:#130b26;}
+.language-panel{
+  max-width:230px;
+  padding:18px 18px 20px;
+  border-top:0;
+  border-radius:14px;
+}
+.lang-title{
+  font-size:10px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+.lang-option{
+  width:100%;
+  height:34px;
+  border:1.1px solid #fff;
+  border-radius:999px;
+  background:transparent;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 12px;
+  margin:8px 0;
+  font-size:10px;
+  cursor:pointer;
+}
+.lang-left{display:flex; align-items:center; gap:10px;}
+.lang-save{
+  width:100%;
+  height:34px;
+  border:1.1px solid #fff;
+  border-radius:999px;
+  background:transparent;
+  color:#fff;
+  margin-top:8px;
+  cursor:pointer;
+  font-size:10px;
+}
+.delete-panel{
+  max-width:720px;
+  text-align:center;
+  border-top:0;
+  border-radius:0;
+}
+.delete-panel h2{
+  color:#ff1212;
+  margin-bottom:6px;
+}
+.delete-panel p{
+  font-size:11px;
+  margin-bottom:20px;
+}
+.delete-warning-box{
+  text-align:left;
+  border:1.2px solid #fff;
+  border-radius:18px;
+  padding:20px 36px;
+  margin-bottom:12px;
+}
+.delete-warning-box strong{font-size:15px;}
+.delete-warning-box ul{margin:12px 0 0 22px; font-size:13px; line-height:1.8;}
+.delete-form-input{
+  width:100%;
+  height:44px;
+  border:1.2px solid #fff;
+  border-radius:999px;
+  background:transparent;
+  color:#fff;
+  padding:0 22px;
+  margin-bottom:8px;
+  outline:none;
+}
+.delete-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+.cancel-outline,
+.delete-red{
+  width:150px;
+  height:42px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+}
+.cancel-outline{background:transparent; color:#fff; border:1.2px solid #fff;}
+.delete-red{background:#ff1515; color:#fff; border:1.2px solid #ff1515;}
+.confirm-panel{
+  max-width:340px;
+  text-align:left;
+  border-top:0;
+  border-radius:0;
+}
+.confirm-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:24px;
+}
+.confirm-icon{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#87808f;
+  position:relative;
+}
+.confirm-icon:after{
+  content:"×";
+  position:absolute;
+  right:-4px;
+  bottom:-4px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#676170;
+  color:#11081f;
+  font-weight:900;
+  text-align:center;
+  line-height:20px;
+}
+.confirm-head h3{font-size:12px; margin:0;}
+.confirm-head p{font-size:9px; margin:3px 0 0; line-height:1.3;}
+.confirm-user{display:flex; align-items:center; gap:10px; margin-bottom:22px;}
+.confirm-user i{font-size:28px;}
+.confirm-user strong{font-size:12px; display:block;}
+.confirm-user span{font-size:10px; color:#aaa2b7;}
+.confirm-green,
+.confirm-cancel{
+  width:100%;
+  height:36px;
+  border-radius:999px;
+  border:1.1px solid #fff;
+  color:#fff;
+  cursor:pointer;
+  margin-bottom:8px;
+}
+.confirm-green{background:#24d66b; border-color:#24d66b; font-weight:800;}
+.confirm-cancel{background:transparent;}
+
+
+/* SETTINGS PAGE ONLY - LIGHT THEME + WORKING SCROLL + HIDDEN SCROLLBAR */
+#settings{
+  height:calc(100vh - 56px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-right:0;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+#settings::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
+}
+#settings .settings-vincera-page{
+  background:#d7dee7;
+  color:#271947;
+  min-height:auto;
+  padding-bottom:44px;
+  box-shadow:0 18px 45px rgba(39,25,71,.10);
+}
+#settings .settings-logo,
+#settings .settings-heading,
+#settings .v-setting-card h3{
+  color:#271947;
+}
+#settings .settings-logout{
+  color:#271947;
+}
+#settings .v-setting-card{
+  background:#ffffff;
+  border:1.2px solid #b9b2c8;
+  box-shadow:0 8px 22px rgba(39,25,71,.05);
+}
+#settings .v-setting-row span,
+#settings .v-setting-row label{
+  color:#372d56;
+}
+#settings .settings-select-btn,
+#settings .delete-small-btn{
+  background:#ece8f5;
+  color:#271947;
+  border:1px solid #c6bfd4;
+}
+#settings .settings-inline-panel{
+  background:#ffffff;
+  color:#271947;
+  border-top:3px solid #7b4ed8;
+  box-shadow:0 16px 35px rgba(39,25,71,.12);
+}
+#settings .settings-inline-panel h2,
+#settings .radio-choice,
+#settings .lang-title,
+#settings .confirm-head h3,
+#settings .confirm-user strong{
+  color:#271947;
+}
+#settings .settings-inline-panel p,
+#settings .confirm-user span,
+#settings .confirm-head p{
+  color:#746b86;
+}
+#settings .radio-choice input{
+  accent-color:#271947;
+}
+#settings .panel-save-btn,
+#settings .lang-option,
+#settings .lang-save,
+#settings .delete-warning-box,
+#settings .delete-form-input,
+#settings .cancel-outline,
+#settings .confirm-cancel{
+  border-color:#271947;
+  color:#271947;
+  background:transparent;
+}
+#settings .panel-save-btn:hover,
+#settings .lang-option:hover,
+#settings .lang-save:hover,
+#settings .confirm-cancel:hover{
+  background:#271947;
+  color:#fff;
+}
+#settings .delete-form-input::placeholder{
+  color:#8b8399;
+}
+#settings .confirm-icon:after{
+  color:#fff;
+}
+
+@media(max-width:760px){
+  .settings-vincera-page{padding:20px 14px;}
+  .settings-heading{margin-left:10px;}
+  .settings-inline-panel{padding:24px 18px;}
+  .panel-save-btn{width:100%;}
+  .delete-actions{flex-direction:column;}
+  .cancel-outline,.delete-red{width:100%;}
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  visibility:hidden;
+  opacity:0;
+  transition:0.25s ease;
+  z-index:999;
+  padding:20px;
+}
+
+.modal.active{
+  visibility:visible;
+  opacity:1;
+}
+
+.modal-box{
+  background:#fff;
+  padding:25px;
+  border-radius:18px;
+  width:340px;
+}
+
+.modal-box h3{
+  margin-bottom:14px;
+  font-size:16px;
+  color:#2f254a;
+}
+
+.form-group{ margin-bottom:12px; }
+
+.modal-box input{
+  width:100%;
+  height:40px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  padding:0 12px;
+  outline:none;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:16px;
+}
+
+.modal-actions button{
+  padding:8px 16px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+
+.save-user{
+  background:#31244f;
+  color:#fff;
+}
+
+.cancel{
+  background:#ddd;
+  color:#2f254a;
+}
+
+@media(max-width:900px){
+  body{
+    flex-direction:column;
+    overflow:auto;
+  }
+
+  .sidebar{
+    width:100%;
+    min-height:auto;
+  }
+
+  .main{ padding:20px; }
+
+  .permission-grid,
+  .settings-grid{
+    grid-template-columns:1fr;
+  }
+
+  .report-box{ max-width:100%; }
+
+  .report-table{ min-width:720px; }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="sidebar-head">
+      <div>
+        <div class="brand-title">Admin Control</div>
+        <div class="brand-sub">Role Management</div>
+      </div>
+      <div class="collapse-icon" onclick="toggleSidebar()">
+        <i class="fa-solid fa-chevron-left"></i>
+      </div>
+    </div>
+  </div>
+
+  <nav class="menu">
+    <a class="menu-item active" onclick="showPage('dashboard', this)">
+      <i class="fa-solid fa-house"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a class="menu-item" onclick="showPage('users', this)">
+      <i class="fa-solid fa-users"></i>
+      <span>User Management</span>
+    </a>
+
+    <a class="menu-item" onclick="showPage('reports', this)">
+      <i class="fa-regular fa-chart-bar"></i>
+      <span>Reports</span>
+    </a>
+
+    <a class="menu-item" onclick="showPage('permissions', this)">
+      <i class="fa-solid fa-key"></i>
+      <span>Permissions</span>
+    </a>
+
+    <a class="menu-item" onclick="showPage('settings', this)">
+      <i class="fa-solid fa-gear"></i>
+      <span>Settings</span>
+    </a>
+  </nav>
+</aside>
+
+<main class="main">
+
+<section id="dashboard" class="page active">
+  <h1 class="dashboard-title">Dashboard</h1>
+
+  <div class="card">
+    <div class="attention-text">67% Average Attention</div>
+  </div>
+
+  <div class="card">
+    <div class="engagement-title">User Engagement</div>
+    <div class="engagement-list">
+      <div class="engagement-row"><span>User 1</span><span class="green">90%</span></div>
+      <div class="engagement-row"><span>User 2</span><span class="red">30%</span></div>
+      <div class="engagement-row"><span>User 3</span><span class="yellow">68%</span></div>
+      <div class="engagement-row"><span>User 4</span><span class="yellow">79%</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="users" class="page">
+  <div class="title-row">
+    <h1 class="section-title">User Management</h1>
+
+    <div class="top-action-buttons">
+      <button class="top-btn" onclick="inviteAllUsers()">
+        <i class="fa-regular fa-envelope"></i> Invite
+      </button>
+
+      <button class="top-btn" onclick="openAddUser()">
+        <i class="fa-solid fa-plus"></i> Add User
+      </button>
+    </div>
+  </div>
+
+  <div class="user-box">
+    <div class="inner-user-panel">
+      <div class="top-tools">
+        <label class="select-all-label">
+          <input type="checkbox" onclick="toggleAll(this)">
+          Select All
+        </label>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchUser" placeholder="Search User" onkeyup="filterUsers()">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="user-scroll" id="userList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="reports" class="page">
+  <div class="report-list-view" id="reportListView">
+    <h1 class="section-title" style="margin-bottom:22px;">Meeting Reports</h1>
+
+    <div class="report-box">
+      <div class="report-inner">
+
+        <div class="report-filter-row">
+          <div class="report-selects">
+            <button class="filter-pill" id="calendarBtn" onclick="openSlide('calendarPanel', this)">
+              <span id="calendarText">Calendar</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <button class="filter-pill" id="hostBtn" onclick="openSlide('hostPanel', this)">
+              <span id="hostText">All Hosts</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+          </div>
+
+          <button class="report-filter-btn" onclick="filterReports()">Filter</button>
+        </div>
+
+        <div class="report-line"></div>
+
+        <div class="report-scroll">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Meeting ID</th>
+                <th>Host</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Participants</th>
+                <th>View</th>
+              </tr>
+            </thead>
+
+            <tbody id="reportTable">
+              <tr data-status="Ongoing"><td>#M1201</td><td>John</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Completed"><td>#M1021</td><td>Sara</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Cancelled"><td>#M1021</td><td>Sara</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Ongoing"><td>#M1021</td><td>Rert</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Completed"><td>#M1021</td><td>Ruth</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Cancelled"><td>#M1021</td><td>Yuiii</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+              <tr data-status="Ongoing"><td>#M1021</td><td>Kenn</td><td>May 2,2026</td><td>45 mins</td><td>12</td><td><button class="view-btn" onclick="viewReport(this)">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="report-details-view hidden" id="reportDetailsView">
+    <div class="details-title-row">
+      <button class="details-back" onclick="backToReports()"><i class="fa-solid fa-chevron-left"></i></button>
+      <h1>Meeting Details</h1>
+    </div>
+
+    <div class="details-info">
+      <div>Meeting ID : <span id="detailMeetingId">#M1201</span></div>
+      <div>Host : <span id="detailHost">John</span></div>
+      <div>Date : <span id="detailDate">May 2 2026</span></div>
+      <div>Duration : <span id="detailDuration">45 Mins</span></div>
+    </div>
+
+    <div class="analytics-heading">Participants Analytics</div>
+
+    <div class="analytics-box">
+      <div class="participant-card">
+        <div class="avatar-circle"><i class="fa-solid fa-circle-user"></i></div>
+        <div class="participant-info"><strong>John</strong><div>Duration :</div><div>Activity</div><div>Video</div></div>
+        <div class="participant-stats"><div>45 Mins</div><div>85%</div></div>
+        <button class="video-status video-on">Video On</button>
+      </div>
+
+      <div class="participant-card">
+        <div class="avatar-circle"><i class="fa-solid fa-circle-user"></i></div>
+        <div class="participant-info"><strong>John</strong><div>Duration :</div><div>Activity</div><div>Video</div></div>
+        <div class="participant-stats"><div>45 Mins</div><div>85%</div></div>
+        <button class="video-status partial">Partial</button>
+      </div>
+
+      <div class="participant-card">
+        <div class="avatar-circle"><i class="fa-solid fa-circle-user"></i></div>
+        <div class="participant-info"><strong>John</strong><div>Duration :</div><div>Activity</div><div>Video</div></div>
+        <div class="participant-stats"><div>45 Mins</div><div>85%</div></div>
+        <button class="video-status video-off">Video Off</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="slide-panel calendar-panel" id="calendarPanel">
+  <div class="slide-title"><span class="back" onclick="changeCalendarMonth(-1)">‹</span><span id="calendarMonthTitle">May 2026</span><span class="next" onclick="changeCalendarMonth(1)">›</span></div>
+  <div class="calendar-grid" id="calendarGrid">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+  </div>
+</div>
+
+<div class="slide-panel host-panel" id="hostPanel">
+  <div class="slide-title"><span class="back" onclick="closeSlides()">‹</span><span>Host</span><span></span></div>
+  <div class="choice-pill selected" onclick="selectHost('all', 'All Hosts', this)">All Hosts <span class="radio"></span></div>
+  <div class="choice-label">Hosts</div>
+  <div class="choice-pill" onclick="selectHost('John', 'Host 1', this)">Host 1 <span class="radio"></span></div>
+  <div class="choice-pill" onclick="selectHost('Sara', 'Host 2', this)">Host 2 <span class="radio"></span></div>
+  <div class="choice-pill" onclick="selectHost('Rert', 'Host 3', this)">Host 3 <span class="radio"></span></div>
+</div>
+
+
+<section id="permissions" class="page">
+  <h1 class="page-title">Permissions Controls</h1>
+  <p class="page-subtitle">Configure User Permissions For Video Conferencing Features</p>
+
+  <div class="permission-tabs">
+    <button class="permission-tab active" onclick="showPermissionTab('meeting', this)">Meeting Controls</button>
+    <button class="permission-tab" onclick="showPermissionTab('communication', this)">Communication</button>
+    <button class="permission-tab" onclick="showPermissionTab('collaboration', this)">Collaboration</button>
+  </div>
+
+  <div id="meeting" class="permission-content active">
+    <div class="permission-grid">
+      <div class="permission-card">
+        <div>
+          <h3>Host Meeting</h3>
+          <p>Allow Users To Create And Host Video Meetings</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Share Screen</h3>
+          <p>Enable Screen Sharing During Meetings</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Record Meeting</h3>
+          <p>Allow Users To Record The Meeting Session</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Mute Participants</h3>
+          <p>Allow Hosts To Mute Participant Audio</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="save-wrap">
+      <button class="save-btn" onclick="savePermissions(this)">Save Changes</button>
+    </div>
+  </div>
+
+  <div id="communication" class="permission-content">
+    <div class="permission-grid">
+      <div class="permission-card">
+        <div>
+          <h3>Public Chat</h3>
+          <p>Send Messages Visible To All Participants</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Private Chat</h3>
+          <p>Send Direct Messages To Individual Participants</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Start Breakout Rooms</h3>
+          <p>Create And Manage Breakout Room Sessions</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="save-wrap">
+      <button class="save-btn" onclick="savePermissions(this)">Save Changes</button>
+    </div>
+  </div>
+
+  <div id="collaboration" class="permission-content">
+    <div class="permission-grid">
+      <div class="permission-card">
+        <div>
+          <h3>Share Files</h3>
+          <p>Upload And Share Files During Meetings</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Use Whiteboard</h3>
+          <p>Access Collaborative Whiteboard Features</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="permission-card">
+        <div>
+          <h3>Create Polls</h3>
+          <p>Create And Manage In-Meeting Polls</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="save-wrap">
+      <button class="save-btn" onclick="savePermissions(this)">Save Changes</button>
+    </div>
+  </div>
+</section>
+
+<section id="settings" class="page">
+  <div class="settings-vincera-page">
+    <div class="settings-topbar">
+      <div class="settings-logo">Vincera</div>
+      <a class="settings-logout" href="#" onclick="alert('Logged out successfully')">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> logout
+      </a>
+    </div>
+
+    <div class="settings-heading">Settings</div>
+
+    <div class="settings-list">
+      <div class="v-setting-card">
+        <h3>Notifications</h3>
+        <div class="v-setting-row"><span>Meeting Alerts</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Chat Notifications</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Email Notifications</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Privacy and Security</h3>
+        <div class="v-setting-row"><span>Show Online Status</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Allow Screen Recording</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Two-Factor Authentication</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Meeting Controls</h3>
+        <div class="v-setting-row"><span>Mute on Join</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Turn Off Video on Join</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Enable Waiting Room</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Audio & Video</h3>
+        <div class="v-setting-row">
+          <span>Microphone</span>
+          <button class="settings-select-btn" onclick="openSettingsPanel('micPanel')"><span id="micSelected">Default Mic</span><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div id="micPanel" class="settings-inline-panel">
+          <h2>Default Microphone</h2>
+          <p>Select your preferred microphone:</p>
+          <label class="radio-choice"><input type="radio" name="mic" value="Internal Microphone" checked> Internal Microphone</label>
+          <label class="radio-choice"><input type="radio" name="mic" value="Headset Microphone"> Headset Microphone</label>
+          <label class="radio-choice"><input type="radio" name="mic" value="External USB Mic"> External USB Mic</label>
+          <button class="panel-save-btn" onclick="saveRadioSetting('mic','micSelected','micPanel')">Save</button>
+        </div>
+        <div class="v-setting-row">
+          <span>Camera</span>
+          <button class="settings-select-btn" onclick="openSettingsPanel('cameraPanel')"><span id="cameraSelected">Default Camera</span><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div id="cameraPanel" class="settings-inline-panel">
+          <h2>Default Camera</h2>
+          <p>Select your preferred camera:</p>
+          <label class="radio-choice"><input type="radio" name="camera" value="Front Camera"> Front Camera</label>
+          <label class="radio-choice"><input type="radio" name="camera" value="External Webcam" checked> External Webcam</label>
+          <label class="radio-choice"><input type="radio" name="camera" value="Virtual Camera"> Virtual Camera</label>
+          <button class="panel-save-btn" onclick="saveRadioSetting('camera','cameraSelected','cameraPanel')">Save</button>
+        </div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Recording</h3>
+        <div class="v-setting-row"><span>Auto Record Meeting</span><label class="v-switch"><input type="checkbox"><span></span></label></div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Accessibility</h3>
+        <div class="v-setting-row"><span>Enable Live Captions</span><label class="v-switch"><input type="checkbox"><span></span></label></div>
+        <div class="v-setting-row">
+          <span>Caption Language</span>
+          <button class="settings-select-btn" onclick="openSettingsPanel('languagePanel')"><span id="languageSelected">Select language</span><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div id="languagePanel" class="settings-inline-panel language-panel">
+          <div class="lang-title">Selected Language</div>
+          <button class="lang-option selected" onclick="selectLang(this,'English (US)')"><span class="lang-left"><i class="fa-solid fa-flag"></i> English (US)</span><i class="fa-solid fa-check-circle"></i></button>
+          <div class="lang-title" style="margin-top:14px;">All Language</div>
+          <button class="lang-option" onclick="selectLang(this,'French')"><span class="lang-left"><i class="fa-solid fa-flag"></i> French</span><i class="fa-regular fa-circle"></i></button>
+          <button class="lang-option" onclick="selectLang(this,'German')"><span class="lang-left"><i class="fa-solid fa-flag"></i> German</span><i class="fa-regular fa-circle"></i></button>
+          <button class="lang-option" onclick="selectLang(this,'Japanese')"><span class="lang-left"><i class="fa-solid fa-flag"></i> Japanese</span><i class="fa-regular fa-circle"></i></button>
+          <button class="lang-option" onclick="selectLang(this,'Malayalam')"><span class="lang-left"><i class="fa-solid fa-flag"></i> Malayalam</span><i class="fa-regular fa-circle"></i></button>
+          <button class="lang-save" onclick="saveLanguage()">Save Settings <i class="fa-solid fa-check" style="margin-left:12px;"></i></button>
+        </div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Advanced</h3>
+        <div class="v-setting-row"><span>Enable Noise Suppression</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+        <div class="v-setting-row"><span>Enable Background Blur</span><label class="v-switch"><input type="checkbox" checked><span></span></label></div>
+      </div>
+
+      <div class="v-setting-card">
+        <h3>Account</h3>
+        <div class="v-setting-row" style="margin-top:18px;">
+          <span style="padding-left:22px;">Delete Account</span>
+          <button class="delete-small-btn" onclick="openSettingsPanel('deletePanel')">Delete</button>
+        </div>
+        <div id="deletePanel" class="settings-inline-panel delete-panel">
+          <h2>Delete Account</h2>
+          <p>This action is irreversible. Please confirm carefully.</p>
+          <div class="delete-warning-box">
+            <strong>You will lose:</strong>
+            <ul>
+              <li>All meetings & recordings</li>
+              <li>Account settings & preferences</li>
+              <li>Chat history</li>
+            </ul>
+          </div>
+          <input class="delete-form-input" id="deleteText" placeholder="Type DELETE to confirm">
+          <input class="delete-form-input" id="deletePassword" type="password" placeholder="Enter your password">
+          <div class="delete-actions">
+            <button class="cancel-outline" onclick="closeSettingsPanels()">Cancel</button>
+            <button class="delete-red" onclick="showDeleteConfirm()">Delete</button>
+          </div>
+        </div>
+        <div id="confirmDeletePanel" class="settings-inline-panel confirm-panel">
+          <div class="confirm-head">
+            <div class="confirm-icon"></div>
+            <div>
+              <h3>Delete Confirm</h3>
+              <p>Please confirm that you wish to delete<br>this account.</p>
+            </div>
+          </div>
+          <div class="confirm-user">
+            <i class="fa-solid fa-circle-user"></i>
+            <div><strong>Miana</strong><span>miana123@gmail.com</span></div>
+          </div>
+          <button class="confirm-green" onclick="confirmDeleteAccount()">Confirm</button>
+          <button class="confirm-cancel" onclick="openSettingsPanel('deletePanel')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="modal" id="userModal">
+  <div class="modal-box">
+    <h3>Add New User</h3>
+
+    <div class="form-group">
+      <input type="text" id="newUserName" placeholder="Enter username">
+    </div>
+
+    <div class="form-group">
+      <input type="email" id="newUserEmail" placeholder="Enter Gmail address">
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeAddUser()">Cancel</button>
+      <button class="save-user" onclick="addUser()">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(pageId, element){
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+
+  document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+  element.classList.add('active');
+  if(pageId === 'reports') buildCalendar();
+}
+
+function toggleSidebar(){
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("collapsed");
+  localStorage.setItem("sidebar", sidebar.classList.contains("collapsed"));
+}
+
+function filterUsers(){
+  const input = document.getElementById("searchUser").value.toLowerCase();
+  const rows = document.querySelectorAll("#userList .user-row");
+
+  rows.forEach(row => {
+    const name = row.querySelector(".user-name").textContent.toLowerCase();
+    const email = row.querySelector(".user-email").textContent.toLowerCase();
+    row.style.display = (name.includes(input) || email.includes(input)) ? "flex" : "none";
+  });
+}
+
+function muteUser(btn){
+  const isMuted = btn.dataset.muted === "true";
+
+  if(!isMuted){
+    btn.dataset.muted = "true";
+    btn.textContent = "Unmute";
+    btn.style.background = "#31244f";
+    btn.style.color = "#fff";
+    btn.style.borderColor = "#31244f";
+  }else{
+    btn.dataset.muted = "false";
+    btn.textContent = "Mute";
+    btn.style.background = "";
+    btn.style.color = "";
+    btn.style.borderColor = "";
+  }
+}
+
+function kickUser(btn){
+  const row = btn.closest('.user-row');
+  row.style.opacity = "0";
+  row.style.transform = "translateX(20px)";
+  row.style.transition = ".3s ease";
+  setTimeout(() => row.remove(), 300);
+}
+
+function toggleAll(master){
+  document.querySelectorAll(".user-check").forEach(check => {
+    check.checked = master.checked;
+  });
+}
+
+function generateLink(){
+  return "https://vincera.app/meet/" + Math.random().toString(36).substring(2,8);
+}
+
+function inviteAllUsers(){
+  const rows = document.querySelectorAll("#userList .user-row");
+  let selectedEmails = [];
+
+  rows.forEach(row => {
+    const checkbox = row.querySelector(".user-check");
+    if(checkbox && checkbox.checked){
+      selectedEmails.push(row.querySelector(".user-email").textContent.trim());
+    }
+  });
+
+  if(selectedEmails.length === 0){
+    alert("Select at least one user");
+    return;
+  }
+
+  const link = generateLink();
+  const subject = encodeURIComponent("Meeting Invitation");
+  const body = encodeURIComponent("Hello,\n\nYou are invited to join the meeting.\n\nMeeting Link:\n" + link);
+
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${selectedEmails.join(",")}&su=${subject}&body=${body}`, "_blank");
+}
+
+function showPermissionTab(tabId, element){
+  document.querySelectorAll('.permission-content').forEach(tab => tab.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+
+  document.querySelectorAll('.permission-tab').forEach(btn => btn.classList.remove('active'));
+  element.classList.add('active');
+}
+
+function savePermissions(btn){
+  btn.classList.add("saved");
+  btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
+
+  setTimeout(() => {
+    btn.classList.remove("saved");
+    btn.innerHTML = btn.textContent.includes("Settings") ? "Save Settings" : "Save Changes";
+  }, 1200);
+}
+
+function openAddUser(){
+  document.getElementById("userModal").classList.add("active");
+}
+
+function closeAddUser(){
+  document.getElementById("userModal").classList.remove("active");
+  document.getElementById("newUserName").value = "";
+  document.getElementById("newUserEmail").value = "";
+}
+
+function addUser(){
+  const name = document.getElementById("newUserName").value.trim();
+  const email = document.getElementById("newUserEmail").value.trim();
+
+  if(name === ""){
+    alert("Enter username");
+    return;
+  }
+
+  if(email === ""){
+    alert("Enter Gmail address");
+    return;
+  }
+
+  const row = document.createElement("div");
+  row.className = "user-row";
+
+  row.innerHTML = `
+    <div class="user-left">
+      <input type="checkbox" class="user-check">
+      <div class="user-info">
+        <div class="user-name">${name}</div>
+        <div class="user-email">${email}</div>
+      </div>
+    </div>
+
+    <div class="action-group">
+      <button class="action-btn" onclick="muteUser(this)">Mute</button>
+      <button class="action-btn" onclick="kickUser(this)">Kick</button>
+    </div>
+  `;
+
+  document.getElementById("userList").prepend(row);
+  closeAddUser();
+}
+
+function renderUsers(){
+  const userList = document.getElementById("userList");
+
+  const users = [
+    { name:"User 1", email:"user1@gmail.com" },
+    { name:"User 2", email:"user2@gmail.com" },
+    { name:"User 3", email:"user3@gmail.com" },
+    { name:"User 4", email:"user4@gmail.com" },
+    { name:"User 5", email:"user5@gmail.com" },
+    { name:"User 6", email:"user6@gmail.com" },
+    { name:"User 7", email:"user7@gmail.com" }
+  ];
+
+  users.forEach(user => {
+    const row = document.createElement("div");
+    row.className = "user-row";
+
+    row.innerHTML = `
+      <div class="user-left">
+        <input type="checkbox" class="user-check">
+        <div class="user-info">
+          <div class="user-name">${user.name}</div>
+          <div class="user-email">${user.email}</div>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <button class="action-btn" onclick="muteUser(this)">Mute</button>
+        <button class="action-btn" onclick="kickUser(this)">Kick</button>
+      </div>
+    `;
+
+    userList.appendChild(row);
+  });
+}
+
+let selectedDate = "all";
+let selectedHost = "all";
+
+let currentCalendarDate = new Date();
+currentCalendarDate.setDate(1);
+
+function openSlide(panelId, btn){
+  const panel = document.getElementById(panelId);
+  const alreadyOpen = panel.classList.contains('open');
+
+  if(alreadyOpen){
+    closeSlides();
+    return;
+  }
+
+  closeSlides();
+
+  if(panelId === 'calendarPanel') buildCalendar();
+
+  if(btn){
+    const rect = btn.getBoundingClientRect();
+    panel.style.top = (rect.bottom + 6) + 'px';
+    panel.style.left = rect.left + 'px';
+    btn.classList.add('active');
+  }
+
+  panel.classList.add('open');
+}
+
+function closeSlides(){
+  document.querySelectorAll('.slide-panel').forEach(panel => panel.classList.remove('open'));
+  document.querySelectorAll('.filter-pill').forEach(pill => pill.classList.remove('active'));
+}
+
+function buildCalendar(){
+  const grid = document.getElementById('calendarGrid');
+  const title = document.getElementById('calendarMonthTitle');
+  if(!grid || !title) return;
+
+  const monthName = currentCalendarDate.toLocaleString('en-US', { month:'long' });
+  const year = currentCalendarDate.getFullYear();
+  const month = currentCalendarDate.getMonth();
+  const today = new Date();
+
+  title.textContent = `${monthName} ${year}`;
+
+  grid.innerHTML = `
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+  `;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  for(let i=0;i<firstDay;i++){
+    const empty = document.createElement('div');
+    empty.className = 'empty-cell';
+    grid.appendChild(empty);
+  }
+
+  for(let day=1; day<=totalDays; day++){
+    const cell = document.createElement('div');
+    cell.className = 'date-cell';
+    cell.textContent = day;
+
+    const formatted = `${monthName} ${day},${year}`;
+    if(selectedDate === formatted) cell.classList.add('selected');
+    if(today.getDate() === day && today.getMonth() === month && today.getFullYear() === year){
+      cell.classList.add('today');
+    }
+
+    cell.onclick = function(){
+      document.querySelectorAll('.date-cell').forEach(x => x.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedDate = formatted;
+      document.getElementById('calendarText').textContent = formatted;
+      closeSlides();
+    };
+
+    grid.appendChild(cell);
+  }
+}
+
+function changeCalendarMonth(step){
+  currentCalendarDate.setMonth(currentCalendarDate.getMonth() + step);
+  buildCalendar();
+}
+
+function selectHost(value, label, element){
+  selectedHost = value;
+  document.getElementById('hostText').textContent = label;
+  document.querySelectorAll('#hostPanel .choice-pill').forEach(pill => pill.classList.remove('selected'));
+  element.classList.add('selected');
+  closeSlides();
+}
+
+
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.slide-panel') && !e.target.closest('.filter-pill')){
+    closeSlides();
+  }
+});
+
+function filterReports(){
+  const rows = document.querySelectorAll("#reportTable tr");
+
+  rows.forEach(row => {
+    const rowHost = row.children[1].textContent.trim();
+    const rowDate = row.children[2].textContent.trim();
+    const dateMatch = selectedDate === "all" || rowDate === selectedDate;
+    const hostMatch = selectedHost === "all" || rowHost === selectedHost;
+
+    row.style.display = dateMatch && hostMatch ? "" : "none";
+  });
+}
+
+function viewReport(btn){
+  const row = btn.closest('tr');
+  document.getElementById('detailMeetingId').textContent = row.children[0].textContent;
+  document.getElementById('detailHost').textContent = row.children[1].textContent;
+  document.getElementById('detailDate').textContent = row.children[2].textContent.replace(',', ' ');
+  document.getElementById('detailDuration').textContent = row.children[3].textContent.replace('mins', 'Mins');
+
+  document.getElementById('reportListView').classList.add('hidden');
+  document.getElementById('reportDetailsView').classList.remove('hidden');
+  closeSlides();
+}
+
+function backToReports(){
+  document.getElementById('reportDetailsView').classList.add('hidden');
+  document.getElementById('reportListView').classList.remove('hidden');
+}
+
+function deleteReport(btn){
+  const row = btn.closest("tr");
+  row.style.transition = ".3s ease";
+  row.style.opacity = "0";
+  row.style.transform = "translateX(20px)";
+
+  setTimeout(() => row.remove(), 300);
+}
+
+function toggleDarkMode(input){
+  if(input.checked){
+    document.body.style.background = "#171022";
+  }else{
+    document.body.style.background = "#dbe2ea";
+  }
+}
+
+document.getElementById("userModal").addEventListener("click", function(e){
+  if(e.target.id === "userModal"){
+    closeAddUser();
+  }
+});
+
+
+function openSettingsPanel(panelId){
+  document.querySelectorAll('#settings .settings-inline-panel').forEach(panel => {
+    if(panel.id !== panelId) panel.classList.remove('active');
+  });
+  const panel = document.getElementById(panelId);
+  if(panel) panel.classList.toggle('active');
+}
+
+function closeSettingsPanels(){
+  document.querySelectorAll('#settings .settings-inline-panel').forEach(panel => panel.classList.remove('active'));
+}
+
+function saveRadioSetting(name, labelId, panelId){
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  if(checked){
+    document.getElementById(labelId).textContent = checked.value;
+  }
+  document.getElementById(panelId).classList.remove('active');
+}
+
+function selectLang(btn, lang){
+  document.querySelectorAll('.lang-option').forEach(option => {
+    option.classList.remove('selected');
+    const icon = option.querySelector('i:last-child');
+    if(icon){ icon.className = 'fa-regular fa-circle'; }
+  });
+  btn.classList.add('selected');
+  const icon = btn.querySelector('i:last-child');
+  if(icon){ icon.className = 'fa-solid fa-check-circle'; }
+  document.getElementById('languageSelected').textContent = lang;
+}
+
+function saveLanguage(){
+  document.getElementById('languagePanel').classList.remove('active');
+}
+
+function showDeleteConfirm(){
+  const text = document.getElementById('deleteText').value.trim();
+  const pass = document.getElementById('deletePassword').value.trim();
+  if(text !== 'DELETE'){
+    alert('Please type DELETE to confirm');
+    return;
+  }
+  if(pass === ''){
+    alert('Please enter your password');
+    return;
+  }
+  document.getElementById('deletePanel').classList.remove('active');
+  document.getElementById('confirmDeletePanel').classList.add('active');
+}
+
+function confirmDeleteAccount(){
+  alert('Account delete confirmed');
+  closeSettingsPanels();
+}
+
+window.onload = function(){
+  if(localStorage.getItem("sidebar") === "true"){
+    document.querySelector(".sidebar").classList.add("collapsed");
+  }
+
+  renderUsers();
+};
+</script>
+
+</body>
+</html>
