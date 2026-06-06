@@ -1,0 +1,18 @@
+{
+  "meeting": {
+    "duration": "1h 30m 00s",
+    "participants": 10
+  },
+  "users": [
+    { "name": "USER 1", "percentage": 30 },
+    { "name": "USER 2", "percentage": 95 },
+    { "name": "USER 4", "percentage": 95 },
+    { "name": "USER 5", "percentage": 95 },
+    { "name": "USER 6", "percentage": 98 },
+    { "name": "USER 7", "percentage": 75 },
+    { "name": "USER 8", "percentage": 82 },
+    { "name": "USER 8", "percentage": 82 },
+    { "name": "USER 9", "percentage": 82 },
+    { "name": "USER 10", "percentage": 82 }
+  ]
+}
