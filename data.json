@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "name": "Febin T",
+      "email": "febin@gmail.com",
+      "phone": "9876543210",
+      "bio": "Frontend Developer"
+    },
+    {
+      "name": "Akhil",
+      "email": "akhil@gmail.com",
+      "phone": "9876543211",
+      "bio": "UI Designer"
+    }
+  ]
+}

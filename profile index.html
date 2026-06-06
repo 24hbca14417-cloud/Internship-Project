@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vincera Profile</title>
+
+<!-- LINKED CSS FILE -->
+<link rel="stylesheet" href="style.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('profile', event)">Profile</div>
+        <div class="tab" onclick="openTab('preferences', event)">Preferences</div>
+    </div>
+    <a href="login page.html" class="logout">Back</a>
+</div>
+
+<div class="main-card">
+
+    <!-- PROFILE -->
+    <div id="profile" class="tab-page">
+        <div class="profile-new-design">
+
+            <div class="profile-left-text">
+                <div>
+                    <h4>Personal Info</h4>
+                    <p>You can change your personal information settings here.</p>
+                </div>
+                <div>
+                    <h4>Bio Description</h4>
+                    <p>This will be your main story. Keep it very, very long.</p>
+                </div>
+            </div>
+
+            <div class="profile-middle">
+
+                <label>Full Name</label>
+                <div class="dark-input">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 12C14.2 12 16 10.2 16 8C16 5.8 14.2 4 12 4C9.8 4 8 5.8 8 8C8 10.2 9.8 12 12 12Z" stroke="white" stroke-width="1.5"/>
+                        <path d="M4 21C4.8 16.8 7.8 15 12 15C16.2 15 19.2 16.8 20 21" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <input id="nameInput" type="text" value="Azusa Nakano">
+                </div>
+
+                <label>Email Address</label>
+                <div class="dark-input">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="5" width="18" height="14" rx="3" stroke="white" stroke-width="1.5"/>
+                        <path d="M4 7L12 13L20 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <input id="emailInput" type="email" value="elementary221b@gmail.com">
+                </div>
+
+                <label>Phone Number</label>
+
+                <div class="phone-box">
+                    <div class="flag-section" onclick="toggleCountryDropdown()">
+                        <img id="selectedFlag" src="https://flagcdn.com/w40/in.png" alt="India">
+                        <span class="arrow">⌄</span>
+                    </div>
+
+                    <input id="phoneInput" type="text" value="+91 1234567899">
+
+                    <div class="country-dropdown" id="countryDropdown">
+                        <input type="text" id="countrySearch" placeholder="Search country..." onkeyup="filterCountries()">
+                        <div class="country-list" id="countryList"></div>
+                    </div>
+                </div>
+
+                <div class="bio-new-wrap">
+                    <textarea class="bio-box" maxlength="300">slothUI is the one and only design system for intelligent, lazy gen Z people. It's the most perfect design tool for procrastinators.</textarea>
+                    <div class="count">0/300</div>
+                </div>
+
+            </div>
+
+            <div class="profile-right-avatar">
+                <p>Change Avatar</p>
+                <div class="avatar-wrapper">
+                    <div class="avatar"></div>
+                    <button class="edit-avatar-btn" onclick="openFileUpload()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="save-btn">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- PREFERENCES -->
+     <div id="preferences" class="tab-page hidden preferences-page">
+
+        <div class="pref-card">
+            <h3>AI Features</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI notes</p>
+                    <span class="desc">Keep Or Take Notes Using AI</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI Attention Tracking</p>
+                    <span class="desc">Tracks The Users Attention Inside The Meeting Using AI</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">AI Summary</p>
+                    <span class="desc">Summarizes The Meeting</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <div class="pref-card">
+            <h3>Attention & Focus</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Focus Alerts</p>
+                    <span class="desc">Alerts When A Users Attention Drop</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Show Attention %</p>
+                    <span class="desc">Enables Users Attention %</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Highlight Low Attention Users (Host)</p>
+                    <span class="desc">Highlights The Area Around The User According To Their Attention Score</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <div class="pref-card">
+            <h3>Meeting Experience</h3>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Live Translation</p>
+                    <span class="desc">Translates Live Audio</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Speaking Tracker</p>
+                    <span class="desc">Enables Users Attention %</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="pref-row">
+                <div>
+                    <p class="title">Sound Alerts</p>
+                    <span class="desc">Pings The User And The Host When The Attention Drops</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
